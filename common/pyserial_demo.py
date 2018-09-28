@@ -4,15 +4,15 @@ import serial.tools.list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
-from pyuic.pyc_serial import Ui_Form
+from pyuic.pyc_serial import Ui_Gadget
 
 
-class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
+class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
     def __init__(self):
         super(Pyqt5_Serial, self).__init__()
         self.setupUi(self)
         self.init()
-        self.setWindowTitle("串口小助手")
+        self.setWindowTitle("Gadget by ZhenhuaWei")
         self.ser = serial.Serial()
         self.port_check()
 
@@ -63,7 +63,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
             self.Com_Dict["%s" % port[0]] = "%s" % port[1]
             self.s1__box_2.addItem(port[0])
         if len(self.Com_Dict) == 0:
-            self.state_label.setText(" 无串口")
+            self.state_label.setText("No Serial Port")
 
     # 串口信息
     def port_imf(self):
@@ -83,7 +83,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         try:
             self.ser.open()
         except:
-            QMessageBox.critical(self, "Port Error", "此串口不能被打开！")
+            QMessageBox.critical(self, "Port Error", "Can not open this port, please check!")
             return None
 
         # 打开串口接收定时器，周期为2ms
@@ -92,7 +92,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         if self.ser.isOpen():
             self.open_button.setEnabled(False)
             self.close_button.setEnabled(True)
-            self.formGroupBox1.setTitle("串口状态（已开启）")
+            self.formGroupBox1.setTitle("Port State(Opened)")
 
     # 关闭串口
     def port_close(self):
@@ -110,7 +110,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.lineEdit.setText(str(self.data_num_received))
         self.data_num_sended = 0
         self.lineEdit_2.setText(str(self.data_num_sended))
-        self.formGroupBox1.setTitle("串口状态（已关闭）")
+        self.formGroupBox1.setTitle("Port State(Closed)")
 
     # 发送数据
     def data_send(self):
@@ -126,7 +126,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
                         try:
                             num = int(input_s[0:2], 16)
                         except ValueError:
-                            QMessageBox.critical(self, 'wrong data', '请输入十六进制数据，以空格分开!')
+                            QMessageBox.critical(self, 'wrong data', 'Please enter hexadecimal, separated by spaces!')
                             return None
                         input_s = input_s[2:].strip()
                         send_list.append(num)
