@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_serial.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.2
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -11,19 +11,19 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Gadget(object):
     def setupUi(self, Gadget):
         Gadget.setObjectName("Gadget")
-        Gadget.resize(881, 555)
+        Gadget.resize(900, 555)
         Gadget.setMinimumSize(QtCore.QSize(881, 555))
-        Gadget.setMaximumSize(QtCore.QSize(881, 555))
+        Gadget.setMaximumSize(QtCore.QSize(900, 560))
         self.gridLayout = QtWidgets.QGridLayout(Gadget)
         self.gridLayout.setContentsMargins(-1, -1, 9, -1)
         self.gridLayout.setObjectName("gridLayout")
         self.tabWidget = QtWidgets.QTabWidget(Gadget)
-        self.tabWidget.setMaximumSize(QtCore.QSize(863, 537))
+        self.tabWidget.setMaximumSize(QtCore.QSize(880, 555))
         self.tabWidget.setObjectName("tabWidget")
         self.port_tab = QtWidgets.QWidget()
         self.port_tab.setObjectName("port_tab")
         self.formGroupBox = QtWidgets.QGroupBox(self.port_tab)
-        self.formGroupBox.setGeometry(QtCore.QRect(660, 360, 181, 91))
+        self.formGroupBox.setGeometry(QtCore.QRect(680, 360, 191, 91))
         self.formGroupBox.setObjectName("formGroupBox")
         self.label = QtWidgets.QLabel(self.formGroupBox)
         self.label.setGeometry(QtCore.QRect(13, 34, 81, 18))
@@ -32,19 +32,19 @@ class Ui_Gadget(object):
         self.label_2.setGeometry(QtCore.QRect(13, 60, 81, 18))
         self.label_2.setObjectName("label_2")
         self.lineEdit = QtWidgets.QLineEdit(self.formGroupBox)
-        self.lineEdit.setGeometry(QtCore.QRect(90, 30, 87, 22))
+        self.lineEdit.setGeometry(QtCore.QRect(100, 30, 87, 22))
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit_2 = QtWidgets.QLineEdit(self.formGroupBox)
-        self.lineEdit_2.setGeometry(QtCore.QRect(90, 60, 87, 22))
+        self.lineEdit_2.setGeometry(QtCore.QRect(100, 60, 87, 22))
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.formGroupBox1 = QtWidgets.QGroupBox(self.port_tab)
-        self.formGroupBox1.setGeometry(QtCore.QRect(660, 30, 181, 301))
+        self.formGroupBox1.setGeometry(QtCore.QRect(670, 20, 201, 311))
         self.formGroupBox1.setObjectName("formGroupBox1")
         self.s1__lb_1 = QtWidgets.QLabel(self.formGroupBox1)
-        self.s1__lb_1.setGeometry(QtCore.QRect(13, 34, 60, 18))
+        self.s1__lb_1.setGeometry(QtCore.QRect(13, 34, 71, 18))
         self.s1__lb_1.setObjectName("s1__lb_1")
         self.s1__box_1 = QtWidgets.QPushButton(self.formGroupBox1)
-        self.s1__box_1.setGeometry(QtCore.QRect(83, 34, 91, 19))
+        self.s1__box_1.setGeometry(QtCore.QRect(83, 34, 111, 19))
         self.s1__box_1.setAutoRepeatInterval(100)
         self.s1__box_1.setDefault(True)
         self.s1__box_1.setObjectName("s1__box_1")
@@ -52,7 +52,7 @@ class Ui_Gadget(object):
         self.s1__lb_2.setGeometry(QtCore.QRect(13, 63, 60, 18))
         self.s1__lb_2.setObjectName("s1__lb_2")
         self.s1__box_2 = QtWidgets.QComboBox(self.formGroupBox1)
-        self.s1__box_2.setGeometry(QtCore.QRect(83, 63, 91, 20))
+        self.s1__box_2.setGeometry(QtCore.QRect(83, 63, 111, 20))
         self.s1__box_2.setObjectName("s1__box_2")
         self.s1__lb_3 = QtWidgets.QLabel(self.formGroupBox1)
         self.s1__lb_3.setGeometry(QtCore.QRect(13, 121, 61, 18))
@@ -123,10 +123,9 @@ class Ui_Gadget(object):
         self.s3__send_text.setGeometry(QtCore.QRect(13, 34, 541, 64))
         self.s3__send_text.setObjectName("s3__send_text")
         self.layoutWidget = QtWidgets.QWidget(self.port_tab)
-        self.layoutWidget.setGeometry(QtCore.QRect(22, 451, 241, 28))
+        self.layoutWidget.setGeometry(QtCore.QRect(22, 451, 300, 29))
         self.layoutWidget.setObjectName("layoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.timer_send_cb = QtWidgets.QCheckBox(self.layoutWidget)
         self.timer_send_cb.setObjectName("timer_send_cb")
@@ -139,10 +138,9 @@ class Ui_Gadget(object):
         self.dw.setObjectName("dw")
         self.horizontalLayout.addWidget(self.dw)
         self.layoutWidget1 = QtWidgets.QWidget(self.port_tab)
-        self.layoutWidget1.setGeometry(QtCore.QRect(572, 52, 82, 58))
+        self.layoutWidget1.setGeometry(QtCore.QRect(572, 52, 95, 58))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget1)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.hex_receive = QtWidgets.QCheckBox(self.layoutWidget1)
         self.hex_receive.setObjectName("hex_receive")
@@ -151,10 +149,9 @@ class Ui_Gadget(object):
         self.s2__clear_button.setObjectName("s2__clear_button")
         self.verticalLayout.addWidget(self.s2__clear_button)
         self.layoutWidget2 = QtWidgets.QWidget(self.port_tab)
-        self.layoutWidget2.setGeometry(QtCore.QRect(571, 361, 82, 90))
+        self.layoutWidget2.setGeometry(QtCore.QRect(571, 361, 96, 90))
         self.layoutWidget2.setObjectName("layoutWidget2")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.layoutWidget2)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.hex_send = QtWidgets.QCheckBox(self.layoutWidget2)
         self.hex_send.setObjectName("hex_send")
@@ -215,8 +212,8 @@ class Ui_Gadget(object):
         self.s3__send_text.setHtml(_translate("Gadget", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\'; font-size:9pt;\"><br /></p></body></html>"))
         self.timer_send_cb.setText(_translate("Gadget", "Timed transmission"))
         self.lineEdit_3.setText(_translate("Gadget", "1000"))
         self.dw.setText(_translate("Gadget", "ms/times"))
