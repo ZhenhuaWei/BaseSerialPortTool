@@ -4,7 +4,7 @@ import serial.tools.list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
-from pyuic.pyc_serial import Ui_Gadget
+from pyuic.ui_serial import Ui_Gadget
 
 
 class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
