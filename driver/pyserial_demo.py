@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
 from pyuic.ui_serial import Ui_Gadget
 
+from common import common
 
 class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
     def __init__(self):
@@ -15,6 +16,8 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
         self.setWindowTitle("Gadget by ZhenhuaWei")
         self.ser = serial.Serial()
         self.port_check()
+        self.save_log_flag = 0
+        self.save_log_fd = None
 
         # 接收数据和发送数据数目置零
         self.data_num_received = 0
@@ -38,6 +41,9 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
         # 发送数据按钮
         self.s3__send_button.clicked.connect(self.data_send)
 
+        # 保存日志
+        self.save_log_cb.clicked.connect(self.save_log)
+
         # 定时发送数据
         self.timer_send = QTimer()
         self.timer_send.timeout.connect(self.data_send)
@@ -53,6 +59,27 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
         # 清除接收窗口
         self.s2__clear_button.clicked.connect(self.receive_data_clear)
 
+    # 保存日志
+    def save_log(self):
+        try:
+            if self.save_log_cb.checkState():
+                self.file_path =  QtWidgets.QFileDialog.getSaveFileName(self,"save file","" ,"Txt files(*.log)")
+                self.timestamp_cb.setEnabled(False)
+                if self.file_path[0] == '':
+                    self.timestamp_cb.setEnabled(True)
+                    self.save_log_cb.setCheckState(0)
+                self.save_log_fd = open(self.file_path[0], "w")
+
+            else:
+                self.save_log_fd.close()
+                self.save_log_fd = None
+                self.timestamp_cb.setEnabled(True)
+        except:
+            self.save_log_fd = None
+            self.save_log_cb.setCheckState(0)
+            self.timestamp_cb.setEnabled(True)
+            QMessageBox.critical(self, "Open Error", "Can not open this files, please check!")
+            return None
     # 串口检测
     def port_check(self):
         # 检测所有存在的串口，将信息存储在字典中
@@ -90,6 +117,8 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
         self.timer.start(2)
 
         if self.ser.isOpen():
+            #清空缓存区
+            self.ser.reset_output_buffer()
             self.open_button.setEnabled(False)
             self.close_button.setEnabled(True)
             self.formGroupBox1.setTitle("Port State(Opened)")
@@ -151,15 +180,26 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
         if num > 0:
             data = self.ser.read(num)
             num = len(data)
+            out_srt = ''
+
+            #添加时间戳
+            if self.timestamp_cb.checkState():
+                out_srt = common.get_datetime()
+                out_srt = "[" + out_srt + "]"
             # hex显示
             if self.hex_receive.checkState():
                 out_s = ''
                 for i in range(0, len(data)):
                     out_s = out_s + '{:02X}'.format(data[i]) + ' '
+                    out_s = out_srt + out_s + "\r\n"
                 self.s2__receive_text.insertPlainText(out_s)
             else:
                 # 串口接收到的字符串为b'123',要转化成unicode字符串才能输出到窗口中去
-                self.s2__receive_text.insertPlainText(data.decode('iso-8859-1'))
+                out_s = out_srt + data.decode('iso-8859-1')
+                self.s2__receive_text.insertPlainText(out_s)
+
+            if self.save_log_fd is not None:
+                self.save_log_fd.write(out_s)
 
             # 统计接收字符的数量
             self.data_num_received += num
