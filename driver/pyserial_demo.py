@@ -65,10 +65,11 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
             if self.save_log_cb.checkState():
                 self.file_path =  QtWidgets.QFileDialog.getSaveFileName(self,"save file","" ,"Txt files(*.log)")
                 self.timestamp_cb.setEnabled(False)
-                if self.file_path[0] == '':
+                if self.file_path[0] != '':
+                    self.save_log_fd = open(self.file_path[0], "w")
+                else:
                     self.timestamp_cb.setEnabled(True)
                     self.save_log_cb.setCheckState(0)
-                self.save_log_fd = open(self.file_path[0], "w")
 
             else:
                 self.save_log_fd.close()
@@ -101,13 +102,12 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Gadget):
 
     # 打开串口
     def port_open(self):
-        self.ser.port = self.s1__box_2.currentText()
-        self.ser.baudrate = int(self.s1__box_3.currentText())
-        self.ser.bytesize = int(self.s1__box_4.currentText())
-        self.ser.stopbits = int(self.s1__box_6.currentText())
-        self.ser.parity = self.s1__box_5.currentText()
-
         try:
+            self.ser.port = self.s1__box_2.currentText()
+            self.ser.baudrate = int(self.s1__box_3.currentText())
+            self.ser.bytesize = int(self.s1__box_4.currentText())
+            self.ser.stopbits = int(self.s1__box_6.currentText())
+            self.ser.parity = self.s1__box_5.currentText()
             self.ser.open()
         except:
             QMessageBox.critical(self, "Port Error", "Can not open this port, please check!")
