@@ -23,7 +23,7 @@
    <property name="rightMargin">
     <number>9</number>
    </property>
-   <item row="0" column="0">
+   <item row="0" column="1">
     <widget class="QTabWidget" name="tabWidget">
      <property name="font">
       <font>
@@ -359,7 +359,7 @@
            <item row="4" column="0">
             <widget class="QPushButton" name="s2__clear_button">
              <property name="text">
-              <string>Clean</string>
+              <string>Clear</string>
              </property>
             </widget>
            </item>
@@ -473,7 +473,7 @@
            <item row="2" column="0">
             <widget class="QPushButton" name="s3__clear_button">
              <property name="text">
-              <string>Clean</string>
+              <string>Clear</string>
              </property>
             </widget>
            </item>
@@ -533,79 +533,7 @@ p, li { white-space: pre-wrap; }
       <attribute name="title">
        <string>TCP/UDP</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_18">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="gridLayout_14">
-         <item row="0" column="0">
-          <widget class="QLabel" name="lb_1">
-           <property name="text">
-            <string>Localhost ip:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEdit_local_ip"/>
-         </item>
-         <item row="0" column="2">
-          <widget class="QPushButton" name="pushButton_get_IP">
-           <property name="text">
-            <string>Get localhost ip</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lb_2">
-           <property name="text">
-            <string>Port:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="lineEdit_port"/>
-         </item>
-         <item row="1" column="2">
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>38</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="0">
-          <widget class="QComboBox" name="client_socket_list">
-           <item>
-            <property name="text">
-             <string>TCP Server</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>TCP Client</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QPushButton" name="pushButton_connect">
-           <property name="text">
-            <string>Connect</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="pushButton_disconnect">
-           <property name="text">
-            <string>Disconnect</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
+      <layout class="QGridLayout" name="gridLayout_16">
        <item row="0" column="1" rowspan="2">
         <layout class="QGridLayout" name="gridLayout_17">
          <item row="0" column="0">
@@ -623,10 +551,17 @@ p, li { white-space: pre-wrap; }
              </property>
             </spacer>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_clean">
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pushButton_clear_recv_area">
              <property name="text">
-              <string>Clean</string>
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="checkBox_timestamp">
+             <property name="text">
+              <string>Timestamp</string>
              </property>
             </widget>
            </item>
@@ -659,33 +594,118 @@ p, li { white-space: pre-wrap; }
          </item>
         </layout>
        </item>
-       <item row="1" column="0">
-        <layout class="QGridLayout" name="gridLayout_16">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="gridLayout_14">
          <item row="0" column="0">
-          <layout class="QGridLayout" name="gridLayout_15">
-           <item row="0" column="0">
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_send">
-             <property name="text">
-              <string>Send</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="QLabel" name="lb_1">
+           <property name="text">
+            <string>Localhost ip:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEdit_local_ip"/>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="pushButton_get_ip">
+           <property name="text">
+            <string>Get localhost ip</string>
+           </property>
+          </widget>
          </item>
          <item row="1" column="0">
+          <widget class="QLabel" name="lb_2">
+           <property name="text">
+            <string>Port:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="lineEdit_port"/>
+         </item>
+         <item row="1" column="2">
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>38</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="0">
+          <widget class="QComboBox" name="comboBox_type">
+           <item>
+            <property name="text">
+             <string>TCP Server</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>TCP Client</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Udp_Server</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Udp_Client</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QPushButton" name="pushButton_link">
+           <property name="text">
+            <string>Connect</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QPushButton" name="pushButton_unlink">
+           <property name="text">
+            <string>Disconnect</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <layout class="QGridLayout" name="gridLayout_15">
+         <item row="0" column="0">
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>128</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="pushButton_clear_send_area">
+           <property name="text">
+            <string>clear</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="pushButton_send">
+           <property name="text">
+            <string>Send</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="3">
           <widget class="QGroupBox" name="groupBox">
            <property name="font">
             <font>

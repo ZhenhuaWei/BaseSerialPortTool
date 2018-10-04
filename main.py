@@ -6,6 +6,7 @@ from driver.tcp_udp_demo import pyqt5_tcp_udp
 from profile.xobj import XObject
 from pyuic.ui_gadget import Ui_Gadget
 
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     main_window_obj = QtWidgets.QWidget()
@@ -20,7 +21,7 @@ if __name__ == '__main__':
 
     # add driver init
     serial_obj = pyqt5_serial()
-
+    tcp_udp_obj = pyqt5_tcp_udp()
 
 
     main_window_obj.show()
