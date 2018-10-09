@@ -11,12 +11,13 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
     # 自定义一个信号
     signal_write_msg = QtCore.pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, st):
         super(pyqt5_tcp_udp,self).__init__()
 
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
+        self.st = st
         self.tcp_socket = None
         self.sever_th = None
         self.client_th = None
@@ -37,11 +38,36 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
 
         self.ui_obj.pushButton_unlink.clicked.connect(self.click_unlink)
 
-        self.ui_obj.pushButton_clear_send_area.clicked.connect(self.click_clear_send_area)
+        self.ui_obj.p_clear_send_area.clicked.connect(self.click_clear_send_area)
 
-        self.ui_obj.pushButton_clear_recv_area.clicked.connect(self.click_clear_recv_area)
+        self.ui_obj.p_clear_recv_area.clicked.connect(self.click_clear_recv_area)
 
         self.ui_obj.pushButton_send.clicked.connect(self.click_send)
+
+        self.ui_obj.comboBox_type.currentIndexChanged.connect(self.combobox_change)
+
+        self.ui_obj.lb_3.hide()
+        self.ui_obj.lineEdit_port_2.hide()    
+        self.ui_obj.pushButton_unlink.setEnabled(False)
+
+    def click_clear_recv_area(self):
+        self.ui_obj.textBrowser_recv.clear()
+
+    def click_clear_send_area(self):
+        self.ui_obj.textEdit_send.setText("")
+
+    def combobox_change(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.close_all()
+        if self.ui_obj.comboBox_type.currentIndex() == 0 or self.ui_obj.comboBox_type.currentIndex() == 2:
+            self.ui_obj.lb_3.hide()
+            self.ui_obj.lineEdit_port_2.hide()
+            self.ui_obj.lb_2.setText(_translate("Gadget", "Port:"))
+        if self.ui_obj.comboBox_type.currentIndex() == 1 or self.ui_obj.comboBox_type.currentIndex() == 3:
+            self.ui_obj.lb_3.show()
+            self.ui_obj.lineEdit_port_2.show()
+            self.ui_obj.lb_2.setText(_translate("Gadget", "Destination port:"))
+
 
     def write_msg(self, msg):
         self.ui_obj.textBrowser_recv.insertPlainText(msg)
@@ -65,28 +91,28 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
             s.close()
 
     def click_link(self):
+        ret = False
         if self.ui_obj.comboBox_type.currentIndex() == 0:
-            self.tcp_server_start()
+            ret = self.tcp_server_start()
         if self.ui_obj.comboBox_type.currentIndex() == 1:
-            self.tcp_client_start()
+            ret = self.tcp_client_start()
         if self.ui_obj.comboBox_type.currentIndex() == 2:
             pass
-            #self.udp_server_start()
+            #ret = self.udp_server_start()
         if self.ui_obj.comboBox_type.currentIndex() == 3:
             pass
-            #self.udp_client_start()
-        self.link = True
-        self.ui_obj.pushButton_unlink.setEnabled(True)
-        self.ui_obj.pushButton_link.setEnabled(False)
+            #ret = self.udp_client_start()
+        if ret:
+            self.link = True
+            self.ui_obj.pushButton_unlink.setEnabled(True)
+            self.ui_obj.pushButton_link.setEnabled(False)
 
     def tcp_client_start(self):
         pass
 
     def tcp_server_start(self):
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # 取消主动断开连接四次握手后的TIME_WAIT状态
         self.tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        # 设定套接字为非阻塞式
         self.tcp_socket.setblocking(False)
         try:
             port = int(self.ui_obj.lineEdit_port.text())
@@ -94,12 +120,14 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
         except Exception as ret:
             msg = 'Please check port!\n'
             self.signal_write_msg.emit(msg)
+            return False
         else:
             self.tcp_socket.listen()
             self.sever_th = threading.Thread(target=self.tcp_server_concurrency)
             self.sever_th.start()
             msg = 'TCP Server are listening port:%s\n' % str(port)
             self.signal_write_msg.emit(msg)
+            return True
 
     def tcp_server_concurrency(self):
         while True:
@@ -109,11 +137,9 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
                 time.sleep(0.001)
             else:
                 client_socket.setblocking(False)
-                # 将创建的客户端套接字存入列表,client_address为ip和端口的元组
                 self.client_socket_list.append((client_socket, client_address))
-                msg = 'TCP服务端已连接IP:%s端口:%s\n' % client_address
+                msg = 'TCP Server connect to ip:%s port:%s\n' % client_address
                 self.signal_write_msg.emit(msg)
-            # 轮询客户端套接字列表，接收数据
             for client, address in self.client_socket_list:
                 try:
                     recv_msg = client.recv(1024)
@@ -188,12 +214,6 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
         self.client_socket_list = list()
         self.ui_obj.pushButton_unlink.setEnabled(False)
         self.ui_obj.pushButton_link.setEnabled(True)
-
-    def click_clear_send_area(self):
-        pass
-
-    def click_clear_recv_area(self):
-        pass
 
     def click_send(self):
         pass
