@@ -4,7 +4,6 @@ import serial.tools.list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
-#from pyuic.ui_gadget import Ui_Gadget
 
 from profile.xobj import XObject
 from common import common

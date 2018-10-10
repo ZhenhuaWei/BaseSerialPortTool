@@ -5,7 +5,7 @@ import threading
 from PyQt5 import QtWidgets,QtCore,QtGui
 from pyuic.ui_gadget import Ui_Gadget
 from profile.xobj import XObject
-
+from common import common
 
 class pyqt5_tcp_udp(QtWidgets.QDialog):
     # 自定义一个信号
@@ -19,11 +19,13 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
 
         self.st = st
         self.tcp_socket = None
+        self.udp_socket = None
         self.sever_th = None
         self.client_th = None
         self.client_socket_list = list()
         self.another = None
         self.link = False
+        self.address = None
 
         self.click_get_ip()
         self.init()
@@ -47,7 +49,7 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
         self.ui_obj.comboBox_type.currentIndexChanged.connect(self.combobox_change)
 
         self.ui_obj.lb_3.hide()
-        self.ui_obj.lineEdit_port_2.hide()    
+        self.ui_obj.lineEdit_destination_ip.hide()    
         self.ui_obj.pushButton_unlink.setEnabled(False)
 
     def click_clear_recv_area(self):
@@ -58,14 +60,16 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
 
     def combobox_change(self):
         _translate = QtCore.QCoreApplication.translate
-        self.close_all()
+        if self.link is True:
+            self.close_all()
+
         if self.ui_obj.comboBox_type.currentIndex() == 0 or self.ui_obj.comboBox_type.currentIndex() == 2:
             self.ui_obj.lb_3.hide()
-            self.ui_obj.lineEdit_port_2.hide()
+            self.ui_obj.lineEdit_destination_ip.hide()
             self.ui_obj.lb_2.setText(_translate("Gadget", "Port:"))
         if self.ui_obj.comboBox_type.currentIndex() == 1 or self.ui_obj.comboBox_type.currentIndex() == 3:
             self.ui_obj.lb_3.show()
-            self.ui_obj.lineEdit_port_2.show()
+            self.ui_obj.lineEdit_destination_ip.show()
             self.ui_obj.lb_2.setText(_translate("Gadget", "Destination port:"))
 
 
@@ -86,7 +90,7 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
                 my_addr = socket.gethostbyname(socket.gethostname())
                 self.ui_obj.lineEdit_local_ip.setText(str(my_addr))
             except Exception as ret_e:
-                self.signal_write_msg.emit("Can not get ip，please connect network！\n")
+                self.signal_write_msg.emit("Can not get ip, please connect network!\n")
         finally:
             s.close()
 
@@ -97,18 +101,101 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
         if self.ui_obj.comboBox_type.currentIndex() == 1:
             ret = self.tcp_client_start()
         if self.ui_obj.comboBox_type.currentIndex() == 2:
-            pass
-            #ret = self.udp_server_start()
+            ret = self.udp_server_start()
         if self.ui_obj.comboBox_type.currentIndex() == 3:
-            pass
-            #ret = self.udp_client_start()
+            ret = self.udp_client_start()
         if ret:
             self.link = True
             self.ui_obj.pushButton_unlink.setEnabled(True)
             self.ui_obj.pushButton_link.setEnabled(False)
 
+    def udp_client_start(self):
+        self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            self.address = (str(self.ui_obj.lineEdit_destination_ip.text()), int(self.ui_obj.lineEdit_port.text()))
+        except Exception as ret:
+            msg = 'Please check destination ip and Port!\n'
+            self.signal_write_msg.emit(msg)
+            return False
+        else:
+            msg = 'UDP Client already start!\n'
+            self.signal_write_msg.emit(msg)
+            return True
+
+    def udp_server_start(self):
+        self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            self.port = int(self.ui_obj.lineEdit_port.text())
+            address = ('', self.port)
+            self.udp_socket.bind(address)
+        except Exception as ret:
+            msg = 'Please check Port!\n'
+            self.signal_write_msg.emit(msg)
+            return False
+        else:
+            self.sever_th = threading.Thread(target=self.udp_server_concurrency)
+            self.sever_th.start()
+            msg = 'UDP Server are listening Port:{}\n'.format(self.port)
+            self.signal_write_msg.emit(msg)
+            return True
+
+    def udp_server_concurrency(self):
+        while True:
+            recv_msg, recv_addr = self.udp_socket.recvfrom(1024)
+            msg = recv_msg.decode('utf-8')
+
+            #添加时间戳
+            if self.ui_obj.checkBox_timestamp.checkState():
+                out_srt = common.get_datetime()
+                msg = "[" + out_srt + "]" + msg
+
+            msg = 'From ip:{} Port:{}:\n{}\n'.format(recv_addr[0], recv_addr[1], msg)
+            self.signal_write_msg.emit(msg)
+
+    def tcp_client_concurrency(self):
+        while True:
+            recv_msg = self.tcp_socket.recv(1024)
+            if recv_msg:
+                msg = recv_msg.decode('utf-8')
+
+                #添加时间戳
+                if self.ui_obj.checkBox_timestamp.checkState():
+                    out_srt = common.get_datetime()
+                    msg = "[" + out_srt + "]" + msg
+
+                msg = 'From ip:{} Port:{}:\n{}\n'.format(self.address[0], self.address[1], msg)
+                self.signal_write_msg.emit(msg)
+            else:
+                self.tcp_socket.close()
+                self.reset()
+                msg = 'Disconnect from Server!\n'
+                self.signal_write_msg.emit(msg)
+                break
+
     def tcp_client_start(self):
-        pass
+        self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            self.address = (str(self.ui_obj.lineEdit_destination_ip.text()), int(self.ui_obj.lineEdit_port.text()))
+        except Exception as ret:
+            msg = 'Please check destination ip and destination port!\n'
+            self.signal_write_msg.emit(msg)
+            return False
+        else:
+            try:
+                msg = 'Connecting destination Server\n'
+                self.signal_write_msg.emit(msg)
+                self.tcp_socket.connect(self.address)
+            except Exception as ret:
+                msg = 'Can not connect destination Server!\n'
+                self.signal_write_msg.emit(msg)
+                return False
+            else:
+                self.client_th = threading.Thread(target=self.tcp_client_concurrency)
+                self.client_th.start()
+                msg = 'TCP Client already connected ip:%s Port:%s\n' % self.address
+                self.signal_write_msg.emit(msg)
+                return True
 
     def tcp_server_start(self):
         self.tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -118,14 +205,14 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
             port = int(self.ui_obj.lineEdit_port.text())
             self.tcp_socket.bind(('', port))
         except Exception as ret:
-            msg = 'Please check port!\n'
+            msg = 'Please check Port!\n'
             self.signal_write_msg.emit(msg)
             return False
         else:
             self.tcp_socket.listen()
             self.sever_th = threading.Thread(target=self.tcp_server_concurrency)
             self.sever_th.start()
-            msg = 'TCP Server are listening port:%s\n' % str(port)
+            msg = 'TCP Server are listening Port:%s\n' % str(port)
             self.signal_write_msg.emit(msg)
             return True
 
@@ -138,7 +225,7 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
             else:
                 client_socket.setblocking(False)
                 self.client_socket_list.append((client_socket, client_address))
-                msg = 'TCP Server connect to ip:%s port:%s\n' % client_address
+                msg = 'TCP Server connect to ip:%s Port:%s\n' % client_address
                 self.signal_write_msg.emit(msg)
             for client, address in self.client_socket_list:
                 try:
@@ -148,7 +235,12 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
                 else:
                     if recv_msg:
                         msg = recv_msg.decode('utf-8')
-                        msg = 'From IP:{}port:{}:\n{}\n'.format(address[0], address[1], msg)
+                        #添加时间戳
+                        if self.ui_obj.checkBox_timestamp.checkState():
+                            out_srt = common.get_datetime()
+                            msg = "[" + out_srt + "]" + msg
+                            
+                        msg = 'From ip:{} Port:{}:\n{}\n'.format(address[0], address[1], msg)
                         self.signal_write_msg.emit(msg)
                     else:
                         client.close()
@@ -181,7 +273,6 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
                     msg = 'Already disconnect!\n'
                     self.signal_write_msg.emit(msg)
 
-                self.st.stop_thread(self.sever_th)
                 self.st.stop_thread(self.client_th)
             except Exception as ret:
                 pass
@@ -193,7 +284,6 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
                     self.signal_write_msg.emit(msg)
 
                 self.st.stop_thread(self.sever_th)
-                self.st.stop_thread(self.client_th)
             except Exception as ret:
                 pass
         if self.ui_obj.comboBox_type.currentIndex() == 3:
@@ -203,7 +293,6 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
                     msg = 'Already disconnect!\n'
                     self.signal_write_msg.emit(msg)
 
-                self.st.stop_thread(self.sever_th)
                 self.st.stop_thread(self.client_th)
             except Exception as ret:
                 pass
@@ -216,4 +305,29 @@ class pyqt5_tcp_udp(QtWidgets.QDialog):
         self.ui_obj.pushButton_link.setEnabled(True)
 
     def click_send(self):
-        pass
+        if self.link is False:
+            msg = 'Please check and connect to Server!\n'
+            self.signal_write_msg.emit(msg)
+        else:
+            try:
+                send_msg = (str(self.ui_obj.textEdit_send.toPlainText())).encode('utf-8')
+
+                if self.ui_obj.comboBox_type.currentIndex() == 0:
+                    for client, address in self.client_socket_list:
+                        client.send(send_msg)
+                    msg = 'TCP Server already send\n'
+                    self.signal_write_msg.emit(msg)
+                if self.ui_obj.comboBox_type.currentIndex() == 1:
+                    self.tcp_socket.send(send_msg)
+                    msg = 'TCP Client already send\n'
+                    self.signal_write_msg.emit(msg)
+                if self.ui_obj.comboBox_type.currentIndex() == 2:
+                    msg = 'UDP Server can not send, Please change to UDP Client!\n'
+                    self.signal_write_msg.emit(msg)
+                if self.ui_obj.comboBox_type.currentIndex() == 3:
+                    self.udp_socket.sendto(send_msg, self.address)
+                    msg = 'UDP Client already send\n'
+                    self.signal_write_msg.emit(msg)
+            except Exception as ret:
+                msg = 'Send fail!\n'
+                self.signal_write_msg.emit(msg)
