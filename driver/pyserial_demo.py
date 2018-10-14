@@ -101,7 +101,7 @@ class pyqt5_serial(object):
         # 显示选定的串口的详细信息
         imf_s = self.ui_obj.s1__box_2.currentText()
         if imf_s != "":
-            self.ui_obj.state_label.setText(self.Com_Dict[self.s1__box_2.currentText()])
+            self.ui_obj.state_label.setText(self.Com_Dict[self.ui_obj.s1__box_2.currentText()])
 
     # 打开串口
     def port_open(self):
