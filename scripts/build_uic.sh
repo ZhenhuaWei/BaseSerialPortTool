@@ -35,22 +35,33 @@ if [ $? -ne 1 ];then
         fi
         temp_file=${ui_file%%.ui}".py"
         pyuic5 $ui_file -o $temp_file
-        echo "[INFO]Pyuic $ui_file -o $temp_file"
+        if [ $? -ne 0 ];then
+            pyuic $ui_file -o $temp_file
+            if [ $? -ne 0 ];then
+                echo "[ERR ]Exc pyuic/pyuic5 fail and exit !!!"
+                exit
+            fi
+        fi
+
+        echo "[INFO]pyuic $ui_file -o $temp_file"
     done
 
     cp *.py  $LOCAL_FILE/../pyuic/ -rf
     if [ $? -ne 0 ];then
         echo "[ERR ]Not have .py files !!!"
+        exit
     else
         uic_file=`ls *.py`
         echo "[INFO]Copy $uic_file to .../pyuic/ floder"
     fi
 else
     echo "[ERR ]Not have .ui files !!!"
+    exit
 fi
 
 cd -
 echo "[INFO]Leave $FLODER"
-echo "[INFO]Pyuic execute success and pyuic floder's files have beed covered"
+echo "[INFO]pyuic execute success and pyuic floder's files have beed covered"
 echo "=============================end============================="
 echo ""
+exit

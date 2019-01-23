@@ -180,7 +180,7 @@ class pyqt5_serial(object):
         except:
             self.port_close()
             return None
-        if num > 0:
+        if num > 5:
             data = self.ser.read(num)
             num = len(data)
             out_srt = ''
@@ -188,13 +188,13 @@ class pyqt5_serial(object):
             #添加时间戳
             if self.ui_obj.timestamp_cb.checkState():
                 out_srt = common.get_datetime()
-                out_srt = "[" + out_srt + "]"
+                out_srt = "[" + out_srt + "] "
             # hex显示
             if self.ui_obj.hex_receive.checkState():
                 out_s = ''
                 for i in range(0, len(data)):
                     out_s = out_s + '{:02X}'.format(data[i]) + ' '
-                    out_s = out_srt + out_s + "\r\n"
+                out_s = out_srt + out_s + "\r\n"
                 self.ui_obj.s2__receive_text.insertPlainText(out_s)
             else:
                 # 串口接收到的字符串为b'123',要转化成unicode字符串才能输出到窗口中去

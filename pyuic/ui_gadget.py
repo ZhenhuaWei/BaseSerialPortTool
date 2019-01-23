@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_gadget.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.2
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -127,7 +127,7 @@ class Ui_Gadget(object):
         self.verticalGroupBox.setObjectName("verticalGroupBox")
         self.gridLayout_4 = QtWidgets.QGridLayout(self.verticalGroupBox)
         self.gridLayout_4.setObjectName("gridLayout_4")
-        self.s2__receive_text = QtWidgets.QTextBrowser(self.verticalGroupBox)
+        self.s2__receive_text = QtWidgets.QTextEdit(self.verticalGroupBox)
         font = QtGui.QFont()
         font.setBold(False)
         font.setWeight(50)
@@ -372,8 +372,8 @@ class Ui_Gadget(object):
         self.s3__send_text.setHtml(_translate("Gadget", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\';\"><br /></p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.serial_tab), _translate("Gadget", "Serial"))
         self.lb_1.setText(_translate("Gadget", "Localhost ip:"))
         self.pushButton_get_ip.setText(_translate("Gadget", "Get localhost ip"))
