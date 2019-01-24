@@ -4,6 +4,7 @@ import serial.tools.list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
+from PyQt5.QtGui import QIcon
 
 from profile.xobj import XObject
 from common import common
@@ -14,6 +15,7 @@ class pyqt5_serial(object):
         self.main_window_obj = XObject.get_object("main_window_obj")
 
         self.main_window_obj.setWindowTitle("Gadget by ZhenhuaWei")
+        self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
         self.save_log_flag = 0
