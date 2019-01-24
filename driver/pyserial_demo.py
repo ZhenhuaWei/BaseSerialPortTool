@@ -61,6 +61,16 @@ class pyqt5_serial(object):
         # 清除接收窗口
         self.ui_obj.s2__clear_button.clicked.connect(self.receive_data_clear)
 
+        # 隐藏端口设置
+        self.ui_obj.setting_hide_cb.clicked.connect(self.setting_hide)
+
+
+    def setting_hide(self):
+        if self.ui_obj.setting_hide_cb.isChecked():
+            self.ui_obj.formGroupBox1.hide()
+        else:
+            self.ui_obj.formGroupBox1.show()
+
     # 保存日志
     def save_log(self):
         try:
@@ -123,8 +133,16 @@ class pyqt5_serial(object):
             #清空缓存区
             self.ser.reset_output_buffer()
             self.ui_obj.open_button.setEnabled(False)
+            self.ui_obj.s1__box_1.setEnabled(False)
+            self.ui_obj.s1__box_2.setEnabled(False)
+            self.ui_obj.s1__box_3.setEnabled(False)
+            self.ui_obj.s1__box_4.setEnabled(False)
+            self.ui_obj.s1__box_5.setEnabled(False)
+            self.ui_obj.s1__box_6.setEnabled(False)
             self.ui_obj.close_button.setEnabled(True)
             self.ui_obj.formGroupBox1.setTitle("Port State(Opened)")
+            self.ui_obj.port_state.setText("(" + self.ser.port + " opened" + ")")
+
 
     # 关闭串口
     def port_close(self):
@@ -137,12 +155,19 @@ class pyqt5_serial(object):
         self.ui_obj.open_button.setEnabled(True)
         self.ui_obj.close_button.setEnabled(False)
         self.ui_obj.lineEdit_3.setEnabled(True)
+        self.ui_obj.s1__box_1.setEnabled(True)
+        self.ui_obj.s1__box_2.setEnabled(True)
+        self.ui_obj.s1__box_3.setEnabled(True)
+        self.ui_obj.s1__box_4.setEnabled(True)
+        self.ui_obj.s1__box_5.setEnabled(True)
+        self.ui_obj.s1__box_6.setEnabled(True)
         # 接收数据和发送数据数目置零
         self.data_num_received = 0
         self.ui_obj.lineEdit.setText(str(self.data_num_received))
         self.data_num_sended = 0
         self.ui_obj.lineEdit_2.setText(str(self.data_num_sended))
         self.ui_obj.formGroupBox1.setTitle("Port State(Closed)")
+        self.ui_obj.port_state.setText("Port Closed")
 
     # 发送数据
     def data_send(self):
