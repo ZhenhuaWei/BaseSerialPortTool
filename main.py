@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # add driver init
     stop_thread = StopThreading()
     serial_obj = pyqt5_serial()
-    tcp_udp_obj = pyqt5_tcp_udp(stop_thread)
+    #tcp_udp_obj = pyqt5_tcp_udp(stop_thread)
 
 
     main_window_obj.show()
