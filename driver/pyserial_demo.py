@@ -49,9 +49,9 @@ class pyqt5_serial(object):
         self.ui_obj.save_log_cb.clicked.connect(self.save_log)
 
         # 定时发送数据
-        self.timer_send = QTimer()
-        self.timer_send.timeout.connect(self.data_send)
-        self.ui_obj.timer_send_cb.stateChanged.connect(self.data_send_timer)
+        # self.timer_send = QTimer()
+        # self.timer_send.timeout.connect(self.data_send)
+        # self.ui_obj.timer_send_cb.stateChanged.connect(self.data_send_timer)
 
         # 定时器接收数据
         self.timer = QTimer()
@@ -149,7 +149,7 @@ class pyqt5_serial(object):
     # 关闭串口
     def port_close(self):
         self.timer.stop()
-        self.timer_send.stop()
+        #self.timer_send.stop()
         try:
             self.ser.close()
         except:
@@ -245,13 +245,13 @@ class pyqt5_serial(object):
             pass
 
     # 定时发送数据
-    def data_send_timer(self):
-        if self.ui_obj.timer_send_cb.isChecked():
-            self.timer_send.start(int(self.ui_obj.lineEdit_3.text()))
-            self.ui_obj.lineEdit_3.setEnabled(False)
-        else:
-            self.timer_send.stop()
-            self.ui_obj.lineEdit_3.setEnabled(True)
+    # def data_send_timer(self):
+    #     if self.ui_obj.timer_send_cb.isChecked():
+    #         self.timer_send.start(int(self.ui_obj.lineEdit_3.text()))
+    #         self.ui_obj.lineEdit_3.setEnabled(False)
+    #     else:
+    #         self.timer_send.stop()
+    #         self.ui_obj.lineEdit_3.setEnabled(True)
 
     # 清除显示
     def send_data_clear(self):
