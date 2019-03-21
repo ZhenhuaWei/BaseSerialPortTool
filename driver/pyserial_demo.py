@@ -23,9 +23,9 @@ class pyqt5_serial(object):
 
         # 接收数据和发送数据数目置零
         self.data_num_received = 0
-        self.ui_obj.lineEdit.setText(str(self.data_num_received))
+        self.ui_obj.recv_len_el.setText(str(self.data_num_received))
         self.data_num_sended = 0
-        self.ui_obj.lineEdit_2.setText(str(self.data_num_sended))
+        self.ui_obj.send_len_el.setText(str(self.data_num_sended))
 
         self.init()
 
@@ -42,8 +42,11 @@ class pyqt5_serial(object):
         # 关闭串口按钮
         self.ui_obj.close_button.clicked.connect(self.port_close)
 
-        # 发送数据按钮
-        self.ui_obj.s3__send_button.clicked.connect(self.data_send)
+        # 发送数据按钮 发送区1
+        self.ui_obj.s3__send_button.clicked.connect(self.data_area_1_send)
+
+        # 发送数据按钮 发送区2
+        self.ui_obj.s3__send_button_2.clicked.connect(self.data_area_2_send)
 
         # 保存日志
         self.ui_obj.save_log_cb.clicked.connect(self.save_log)
@@ -57,7 +60,10 @@ class pyqt5_serial(object):
         self.timer = QTimer()
         self.timer.timeout.connect(self.data_receive)
 
-        # 清除发送窗口
+        # 清除发送窗口 发送区1
+        self.ui_obj.s3__clear_button.clicked.connect(self.send_data_clear)
+
+        # 清除发送窗口 发送区2
         self.ui_obj.s3__clear_button.clicked.connect(self.send_data_clear)
 
         # 清除接收窗口
@@ -156,7 +162,7 @@ class pyqt5_serial(object):
             pass
         self.ui_obj.open_button.setEnabled(True)
         self.ui_obj.close_button.setEnabled(False)
-        self.ui_obj.lineEdit_3.setEnabled(True)
+        #self.ui_obj.lineEdit_3.setEnabled(True)
         self.ui_obj.s1__box_1.setEnabled(True)
         self.ui_obj.s1__box_2.setEnabled(True)
         self.ui_obj.s1__box_3.setEnabled(True)
@@ -165,19 +171,24 @@ class pyqt5_serial(object):
         self.ui_obj.s1__box_6.setEnabled(True)
         # 接收数据和发送数据数目置零
         self.data_num_received = 0
-        self.ui_obj.lineEdit.setText(str(self.data_num_received))
+        self.ui_obj.recv_len_el.setText(str(self.data_num_received))
         self.data_num_sended = 0
-        self.ui_obj.lineEdit_2.setText(str(self.data_num_sended))
+        self.ui_obj.send_len_el.setText(str(self.data_num_sended))
         self.ui_obj.formGroupBox1.setTitle("Port State(Closed)")
         self.ui_obj.port_state.setText("Port Closed")
 
     # 发送数据
-    def data_send(self):
+    def data_send(self, send_area_num):
         if self.ser.isOpen():
-            input_s = self.ui_obj.s3__send_text.toPlainText()
+            if send_area_num == 1:
+                input_s = self.ui_obj.s3__send_text.toPlainText()
+                hex_send_flag = self.ui_obj.hex_send.isChecked()
+            else:
+                input_s = self.ui_obj.s3__send_text_2.toPlainText()
+                hex_send_flag = self.ui_obj.hex_send_2.isChecked()
             if input_s != "":
                 # 非空字符串
-                if self.ui_obj.hex_send.isChecked():
+                if hex_send_flag:
                     # hex发送
                     input_s = input_s.strip()
                     send_list = []
@@ -196,9 +207,17 @@ class pyqt5_serial(object):
 
                 num = self.ser.write(input_s)
                 self.data_num_sended += num
-                self.ui_obj.lineEdit_2.setText(str(self.data_num_sended))
+                self.ui_obj.send_len_el.setText(str(self.data_num_sended))
         else:
             pass
+
+    #选择发送区1发送
+    def data_area_1_send(self):
+        self.data_send(1)
+
+    #选择发送区1发送
+    def data_area_2_send(self):
+        self.data_send(2)
 
     # 接收数据
     def data_receive(self):
@@ -233,7 +252,7 @@ class pyqt5_serial(object):
 
             # 统计接收字符的数量
             self.data_num_received += num
-            self.ui_obj.lineEdit.setText(str(self.data_num_received))
+            self.ui_obj.recv_len_el.setText(str(self.data_num_received))
 
             # 获取到text光标
             textCursor = self.ui_obj.s2__receive_text.textCursor()
