@@ -61,10 +61,13 @@ class pyqt5_serial(object):
         self.timer.timeout.connect(self.data_receive)
 
         # 清除发送窗口 发送区1
-        self.ui_obj.s3__clear_button.clicked.connect(self.send_data_clear)
+        self.ui_obj.s3__clear_button.clicked.connect(self.send_data_1_clear)
 
         # 清除发送窗口 发送区2
-        self.ui_obj.s3__clear_button.clicked.connect(self.send_data_clear)
+        self.ui_obj.s3__clear_button_2.clicked.connect(self.send_data_2_clear)
+
+        # 清除组帧透传窗口
+        self.ui_obj.s3__clear_button_3.clicked.connect(self.compose_data_clear)
 
         # 清除接收窗口
         self.ui_obj.s2__clear_button.clicked.connect(self.receive_data_clear)
@@ -272,10 +275,19 @@ class pyqt5_serial(object):
     #         self.timer_send.stop()
     #         self.ui_obj.lineEdit_3.setEnabled(True)
 
-    # 清除显示
-    def send_data_clear(self):
+    # 清除发送区1
+    def send_data_1_clear(self):
         self.ui_obj.s3__send_text.setText("")
 
+    # 清除发送区2
+    def send_data_2_clear(self):
+        self.ui_obj.s3__send_text_2.setText("")
+
+    # 清除透传数据区
+    def compose_data_clear(self):
+        self.ui_obj.compose_tx.setText("")
+
+    # 清除接收区
     def receive_data_clear(self):
         self.ui_obj.s2__receive_text.setText("")
 
