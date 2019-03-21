@@ -1115,6 +1115,41 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>550</y>
+     <width>61</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Trsp Data:</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>520</y>
+     <width>207</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_13">
+    <item row="0" column="0">
+     <widget class="QLabel" name="chl_num_lb">
+      <property name="text">
+       <string>Channel Num:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="chi_num_le"/>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <resources/>
  <connections/>
