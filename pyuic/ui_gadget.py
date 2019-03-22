@@ -529,10 +529,16 @@ class Ui_Gadget(object):
         self.s1__box_6.setItemText(1, _translate("Gadget", "2"))
         self.open_button.setText(_translate("Gadget", "Open"))
         self.close_button.setText(_translate("Gadget", "Close"))
-        self.channel_num_lb.setText(_translate("Gadget", "Channel (Hex):"))
+        self.channel_num_lb.setText(_translate("Gadget", "Channel :"))
         self.compose_bt.setText(_translate("Gadget", "Compose"))
         self.label.setText(_translate("Gadget", "Trsp Data(Hex):"))
         self.s3__clear_button_3.setText(_translate("Gadget", "Clear"))
+        self.channel_num_le.setText(_translate("Gadget", "0"))
+        self.compose_tx.setHtml(_translate("Gadget", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Arial\'; font-size:9pt; font-weight:600; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">00 00 00 </p></body></html>"))
         self.verticalGroupBox_3.setTitle(_translate("Gadget", "Sending Area 2:"))
         self.s3__send_text_2.setHtml(_translate("Gadget", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

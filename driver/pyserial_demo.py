@@ -14,7 +14,7 @@ class pyqt5_serial(object):
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
-        self.main_window_obj.setWindowTitle("Gadget by ZhenhuaWei")
+        self.main_window_obj.setWindowTitle("HT_RF_TRSP_Tools-v0.0.1")
         self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
@@ -75,6 +75,7 @@ class pyqt5_serial(object):
         # 隐藏端口设置
         self.ui_obj.setting_hide_cb.clicked.connect(self.setting_hide)
 
+        self.ui_obj.compose_bt.clicked.connect(self.compose_func)
 
     def setting_hide(self):
         if self.ui_obj.setting_hide_cb.isChecked():
@@ -181,14 +182,8 @@ class pyqt5_serial(object):
         self.ui_obj.port_state.setText("Port Closed")
 
     # 发送数据
-    def data_send(self, send_area_num):
+    def data_send(self, input_s, hex_send_flag):
         if self.ser.isOpen():
-            if send_area_num == 1:
-                input_s = self.ui_obj.s3__send_text.toPlainText()
-                hex_send_flag = self.ui_obj.hex_send.isChecked()
-            else:
-                input_s = self.ui_obj.s3__send_text_2.toPlainText()
-                hex_send_flag = self.ui_obj.hex_send_2.isChecked()
             if input_s != "":
                 # 非空字符串
                 if hex_send_flag:
@@ -216,11 +211,15 @@ class pyqt5_serial(object):
 
     #选择发送区1发送
     def data_area_1_send(self):
-        self.data_send(1)
+        input_s = self.ui_obj.s3__send_text.toPlainText()
+        hex_send_flag = self.ui_obj.hex_send.isChecked()
+        self.data_send(input_s, hex_send_flag)
 
     #选择发送区1发送
     def data_area_2_send(self):
-        self.data_send(2)
+        input_s = self.ui_obj.s3__send_text_2.toPlainText()
+        hex_send_flag = self.ui_obj.hex_send_2.isChecked()
+        self.data_send(input_s, hex_send_flag)
 
     # 接收数据
     def data_receive(self):
@@ -291,5 +290,38 @@ class pyqt5_serial(object):
     def receive_data_clear(self):
         self.ui_obj.s2__receive_text.setText("")
 
+    #组帧
+    def compose_func(self):
+        try:
+            send_str = ''
+            send_list = [0x53,0x47,0,0]
+            trsp_list = []
+            channel_num_str = self.ui_obj.channel_num_le.text()
+            compose_tx_str = self.ui_obj.compose_tx.toPlainText()
+            if int(channel_num_str) >= 0 and int(channel_num_str) <=64:
+                send_list.append(int(channel_num_str))
+                compose_tx_str = compose_tx_str.strip()
+                while compose_tx_str != '':
+                    try:
+                        num = int(compose_tx_str[0:2], 16)
+                    except ValueError:
+                        QMessageBox.critical(self.main_window_obj, 'wrong data', 'Please enter hexadecimal, separated by spaces!')
+                        return None
+                    compose_tx_str = compose_tx_str[2:].strip()
+                    trsp_list.append(num)
+                send_list[2] = len(trsp_list) + 6
+                send_list[3] = len(trsp_list)
 
+                send_list.extend(trsp_list)
+                send_list.append(common.uchar_checksum(send_list))
 
+                for data in send_list:
+                    send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
+
+                self.ui_obj.s3__send_text_2.clear()
+                self.ui_obj.s3__send_text_2.setText(send_str)
+
+            else:
+                QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
+        except: 
+            QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")

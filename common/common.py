@@ -2,6 +2,7 @@ import datetime
 import threading
 import ctypes
 import inspect
+import random
 
 class StopThreading:
     @staticmethod
@@ -32,3 +33,18 @@ def get_datetime():
             
     """
     return str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'))
+
+def uchar_checksum(data, byteorder='little'):
+    '''
+    char_checksum 按字节计算校验和。每个字节被翻译为无符号整数
+    @param data: 字节串 
+    @param byteorder: 大/小端
+    @return:返回最低1位
+    '''
+    length = len(data)
+    checksum = 0
+    for i in range(0, length):
+        checksum += int.from_bytes(data[i:i+1], byteorder, signed=False)
+        checksum &= 0xFF # 强制截断
+         
+    return checksum
