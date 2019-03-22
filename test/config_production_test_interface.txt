@@ -1,0 +1,36 @@
+##########################################################
+#                                                                                                                #
+#                                           Production Test Config                                  #
+#                                                                                                                #
+##########################################################
+
+device_type = 0  # 0: STA / 1: IIC / 2: CCO
+dynamic_filter_en = 0  # 0: fixed filter / 1: dynamic filter
+vendor_id = PH
+phase = A  # Phase A(L/G), Phase B(L/N), Phase C(N/G)
+burned_mac_address = 11:22:33:44:55:88
+nf_detection_times = 5
+flatness_threshold = 50
+hpf_thd_700k = 15
+hpf_thd_2m = 40
+csr_thd = 90
+gold_ppm = -3  # golden real ppm : keep integer and remove fraction part!
+phy_power_att = 0  # unit: dB, for communication sensitivity test
+filter_gpio_num = 23  # STA: 23 / IIC: 28 / CCO: 2
+
+# ------------ Function Enable Flag ------------
+# 1: Enable, 0: Disable
+
+write_vendor_id_flag = 1
+read_fw_ver_flag = 1
+read_chip_id_flag = 1
+read_ori_mac_address_flag = 1
+burned_mac_address_flag = 1
+noise_floor_detection_flag = 1
+tx_rx_loopback_flag = 1
+flatness_flag = 1
+sen_csr_flag = 1
+led_control_flag = 1
+
+
+
