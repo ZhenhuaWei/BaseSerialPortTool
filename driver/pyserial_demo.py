@@ -14,7 +14,7 @@ class pyqt5_serial(object):
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
-        self.main_window_obj.setWindowTitle("HT_RF_TRSP_Tools-v0.0.1")
+        self.main_window_obj.setWindowTitle("HT_RF_TRSP_Tools-v0.0.2")
         self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
@@ -294,7 +294,7 @@ class pyqt5_serial(object):
     def compose_func(self):
         try:
             send_str = ''
-            send_list = [0x53,0x47,0,0]
+            send_list = [0x53,0x4D,0,0]
             trsp_list = []
             channel_num_str = self.ui_obj.channel_num_le.text()
             compose_tx_str = self.ui_obj.compose_tx.toPlainText()
