@@ -14,7 +14,7 @@ class pyqt5_serial(object):
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
-        self.main_window_obj.setWindowTitle("HT_RF_TRSP_Tools-v0.0.2")
+        self.main_window_obj.setWindowTitle("HT_RF_TRSP_Tools-v0.0.3")
         self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
@@ -299,7 +299,7 @@ class pyqt5_serial(object):
             channel_num_str = self.ui_obj.channel_num_le.text()
             compose_tx_str = self.ui_obj.compose_tx.toPlainText()
             if int(channel_num_str) >= 0 and int(channel_num_str) <=64:
-                send_list.append(int(channel_num_str))
+                send_list[2] = int(channel_num_str)
                 compose_tx_str = compose_tx_str.strip()
                 while compose_tx_str != '':
                     try:
@@ -309,7 +309,6 @@ class pyqt5_serial(object):
                         return None
                     compose_tx_str = compose_tx_str[2:].strip()
                     trsp_list.append(num)
-                send_list[2] = len(trsp_list) + 6
                 send_list[3] = len(trsp_list)
 
                 send_list.extend(trsp_list)
