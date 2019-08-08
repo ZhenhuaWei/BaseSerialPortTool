@@ -15,7 +15,7 @@ class pyqt5_serial(object):
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
-        self.main_window_obj.setWindowTitle("HT_RF_NODE2NODE_Tools-v0.0.1")
+        self.main_window_obj.setWindowTitle("HT_RF_NODE2NODE_Tools-v0.0.2 by wzh")
         self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
@@ -314,7 +314,7 @@ class pyqt5_serial(object):
                 self.save_log_fd.write(out_s)
 
             # if operator.eq(recv_buf[:1],self.send_buf[:1]) == True:
-            if 0xEE in recv_buf:
+            if 0xEF in recv_buf:
                 self.recv_num = self.recv_num + 1
                 self.ui_obj.recv_num_le.setText(str(self.recv_num))
 
@@ -343,10 +343,18 @@ class pyqt5_serial(object):
     # 清除发送区1
     def send_data_1_clear(self):
         self.ui_obj.s3__send_text.setText("")
+        self.send_num = 0
+        self.ui_obj.send_num_le.setText(str(self.send_num))
+        self.recv_num = 0
+        self.ui_obj.recv_num_le.setText(str(self.recv_num))
 
     # 清除透传数据区
     def compose_data_clear(self):
         self.ui_obj.compose_tx.setText("")
+        self.send_num = 0
+        self.ui_obj.send_num_le.setText(str(self.send_num))
+        self.recv_num = 0
+        self.ui_obj.recv_num_le.setText(str(self.recv_num))
 
     # 清除接收区
     def receive_data_clear(self):
