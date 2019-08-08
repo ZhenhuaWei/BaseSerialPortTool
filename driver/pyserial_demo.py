@@ -1,10 +1,11 @@
 import sys
 import serial
+import operator
 import serial.tools.list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon,QColor
 
 from profile.xobj import XObject
 from common import common
@@ -14,7 +15,7 @@ class pyqt5_serial(object):
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
-        self.main_window_obj.setWindowTitle("HT_RF_TRSP_Tools-v0.0.3")
+        self.main_window_obj.setWindowTitle("HT_RF_NODE2NODE_Tools-v0.0.1")
         self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
@@ -26,6 +27,16 @@ class pyqt5_serial(object):
         self.ui_obj.recv_len_el.setText(str(self.data_num_received))
         self.data_num_sended = 0
         self.ui_obj.send_len_el.setText(str(self.data_num_sended))
+
+        self.send_buf = []
+        self.send_num = 0
+        self.ui_obj.send_num_le.setText(str(self.send_num))
+        self.recv_num = 0
+        self.ui_obj.recv_num_le.setText(str(self.recv_num))
+        self.timing_num = 1000
+        self.ui_obj.timing_le.setText(str(self.timing_num))
+        self.test_times = 1
+        self.ui_obj.test_times_le.setText(str(self.test_times))
 
         self.init()
 
@@ -45,15 +56,18 @@ class pyqt5_serial(object):
         # 发送数据按钮 发送区1
         self.ui_obj.s3__send_button.clicked.connect(self.data_area_1_send)
 
-        # 发送数据按钮 发送区2
-        self.ui_obj.s3__send_button_2.clicked.connect(self.data_area_2_send)
-
         # 保存日志
         self.ui_obj.save_log_cb.clicked.connect(self.save_log)
 
+         # 开始测试
+        self.ui_obj.start_test_bt.clicked.connect(self.start_test)
+
+        # 停止测试
+        self.ui_obj.stop_test_bt.clicked.connect(self.stop_test)
+
         # 定时发送数据
-        # self.timer_send = QTimer()
-        # self.timer_send.timeout.connect(self.data_send)
+        self.timer_send = QTimer()
+        self.timer_send.timeout.connect(self.data_send_timer)
         # self.ui_obj.timer_send_cb.stateChanged.connect(self.data_send_timer)
 
         # 定时器接收数据
@@ -62,9 +76,6 @@ class pyqt5_serial(object):
 
         # 清除发送窗口 发送区1
         self.ui_obj.s3__clear_button.clicked.connect(self.send_data_1_clear)
-
-        # 清除发送窗口 发送区2
-        self.ui_obj.s3__clear_button_2.clicked.connect(self.send_data_2_clear)
 
         # 清除组帧透传窗口
         self.ui_obj.s3__clear_button_3.clicked.connect(self.compose_data_clear)
@@ -173,6 +184,7 @@ class pyqt5_serial(object):
         self.ui_obj.s1__box_4.setEnabled(True)
         self.ui_obj.s1__box_5.setEnabled(True)
         self.ui_obj.s1__box_6.setEnabled(True)
+        
         # 接收数据和发送数据数目置零
         self.data_num_received = 0
         self.ui_obj.recv_len_el.setText(str(self.data_num_received))
@@ -180,6 +192,57 @@ class pyqt5_serial(object):
         self.ui_obj.send_len_el.setText(str(self.data_num_sended))
         self.ui_obj.formGroupBox1.setTitle("Port State(Closed)")
         self.ui_obj.port_state.setText("Port Closed")
+
+        self.send_num = 0
+        self.ui_obj.send_num_le.setText(str(self.send_num))
+        self.recv_num = 0
+        self.ui_obj.recv_num_le.setText(str(self.recv_num))
+        self.timing_num = 1000
+        self.ui_obj.timing_le.setText(str(self.timing_num))
+        self.test_times = 1
+        self.ui_obj.test_times_le.setText(str(self.test_times))
+
+    # 开始测试
+    def start_test(self):
+        if self.ser.isOpen():
+            self.timing_num = int(self.ui_obj.timing_le.text())
+            self.test_times = int(self.ui_obj.test_times_le.text())
+
+            self.timer_send.start(self.timing_num)
+
+            self.send_num = 0
+            self.ui_obj.send_num_le.setText(str(self.send_num))
+            self.recv_num = 0
+            self.ui_obj.recv_num_le.setText(str(self.recv_num))
+            self.ui_obj.timing_le.setEnabled(False)
+            self.ui_obj.send_num_le.setEnabled(False)
+            self.ui_obj.recv_num_le.setEnabled(False)
+            self.ui_obj.s3__send_text.setEnabled(False)
+            self.ui_obj.compose_tx.setEnabled(False)
+
+            self.ui_obj.compose_bt.setEnabled(False)
+            self.ui_obj.s3__clear_button.setEnabled(False)
+            self.ui_obj.s3__send_button.setEnabled(False)
+            self.ui_obj.start_test_bt.setEnabled(False)
+            self.ui_obj.s3__clear_button_3.setEnabled(False)
+        else:
+            QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opend!')
+
+    # 停止测试
+    def stop_test(self):
+        self.ui_obj.timing_le.setEnabled(True)
+        self.ui_obj.send_num_le.setEnabled(True)
+        self.ui_obj.recv_num_le.setEnabled(True)
+        self.ui_obj.s3__send_text.setEnabled(True)
+        self.ui_obj.compose_tx.setEnabled(True)
+
+        self.ui_obj.compose_bt.setEnabled(True)
+        self.ui_obj.s3__clear_button.setEnabled(True)
+        self.ui_obj.s3__send_button.setEnabled(True)
+        self.ui_obj.start_test_bt.setEnabled(True)
+        self.ui_obj.s3__clear_button_3.setEnabled(True)
+
+        self.timer_send.stop()
 
     # 发送数据
     def data_send(self, input_s, hex_send_flag):
@@ -206,8 +269,10 @@ class pyqt5_serial(object):
                 num = self.ser.write(input_s)
                 self.data_num_sended += num
                 self.ui_obj.send_len_el.setText(str(self.data_num_sended))
+                self.send_num = self.send_num+1
+                self.ui_obj.send_num_le.setText(str(self.send_num))
         else:
-            pass
+            QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opend!')
 
     #选择发送区1发送
     def data_area_1_send(self):
@@ -215,20 +280,15 @@ class pyqt5_serial(object):
         hex_send_flag = self.ui_obj.hex_send.isChecked()
         self.data_send(input_s, hex_send_flag)
 
-    #选择发送区1发送
-    def data_area_2_send(self):
-        input_s = self.ui_obj.s3__send_text_2.toPlainText()
-        hex_send_flag = self.ui_obj.hex_send_2.isChecked()
-        self.data_send(input_s, hex_send_flag)
-
     # 接收数据
     def data_receive(self):
+        recv_buf = []
         try:
             num = self.ser.inWaiting()
         except:
             self.port_close()
             return None
-        if num > 5:
+        if num > 2:
             data = self.ser.read(num)
             num = len(data)
             out_srt = ''
@@ -242,6 +302,7 @@ class pyqt5_serial(object):
                 out_s = ''
                 for i in range(0, len(data)):
                     out_s = out_s + '{:02X}'.format(data[i]) + ' '
+                    recv_buf.append(int(data[i]))
                 out_s = out_srt + out_s + "\r\n"
                 self.ui_obj.s2__receive_text.insertPlainText(out_s)
             else:
@@ -251,6 +312,11 @@ class pyqt5_serial(object):
 
             if self.save_log_fd is not None:
                 self.save_log_fd.write(out_s)
+
+            # if operator.eq(recv_buf[:1],self.send_buf[:1]) == True:
+            if 0xEE in recv_buf:
+                self.recv_num = self.recv_num + 1
+                self.ui_obj.recv_num_le.setText(str(self.recv_num))
 
             # 统计接收字符的数量
             self.data_num_received += num
@@ -266,21 +332,17 @@ class pyqt5_serial(object):
             pass
 
     # 定时发送数据
-    # def data_send_timer(self):
-    #     if self.ui_obj.timer_send_cb.isChecked():
-    #         self.timer_send.start(int(self.ui_obj.lineEdit_3.text()))
-    #         self.ui_obj.lineEdit_3.setEnabled(False)
-    #     else:
-    #         self.timer_send.stop()
-    #         self.ui_obj.lineEdit_3.setEnabled(True)
+    def data_send_timer(self):
+
+        if self.test_times > 0:
+            self.test_times = self.test_times-1
+            self.data_area_1_send()
+        else:
+            self.stop_test()
 
     # 清除发送区1
     def send_data_1_clear(self):
         self.ui_obj.s3__send_text.setText("")
-
-    # 清除发送区2
-    def send_data_2_clear(self):
-        self.ui_obj.s3__send_text_2.setText("")
 
     # 清除透传数据区
     def compose_data_clear(self):
@@ -289,38 +351,45 @@ class pyqt5_serial(object):
     # 清除接收区
     def receive_data_clear(self):
         self.ui_obj.s2__receive_text.setText("")
+        self.data_num_received = 0
+        self.ui_obj.recv_len_el.setText(str(self.data_num_received))
+        self.data_num_sended = 0
+        self.ui_obj.send_len_el.setText(str(self.data_num_sended))
 
     #组帧
     def compose_func(self):
         try:
             send_str = ''
-            send_list = [0x53,0x4D,0,0]
-            trsp_list = []
-            channel_num_str = self.ui_obj.channel_num_le.text()
+            self.send_buf = [0xee,]
+            send_list = [0x68, 0x00, 0x00, 0x40, 0x04, 0xF4, 0xEE, 0x04, 0x02, 0xE8, 0x00, 0x00, 0x00,]
+            dB_dict = {"dB01":1,"dB02":2,"dB05":5,"dB08":8,"dB11":11,"dB14":14,"dB17":17,"dB20":20}
+            
             compose_tx_str = self.ui_obj.compose_tx.toPlainText()
-            if int(channel_num_str) >= 0 and int(channel_num_str) <=64:
-                send_list[2] = int(channel_num_str)
-                compose_tx_str = compose_tx_str.strip()
-                while compose_tx_str != '':
-                    try:
-                        num = int(compose_tx_str[0:2], 16)
-                    except ValueError:
-                        QMessageBox.critical(self.main_window_obj, 'wrong data', 'Please enter hexadecimal, separated by spaces!')
-                        return None
-                    compose_tx_str = compose_tx_str[2:].strip()
-                    trsp_list.append(num)
-                send_list[3] = len(trsp_list)
+            compose_tx_str = compose_tx_str.strip()
+            while compose_tx_str != '':
+                try:
+                    num = int(compose_tx_str[0:2], 16)
+                except ValueError:
+                    QMessageBox.critical(self.main_window_obj, 'wrong data', 'Please enter hexadecimal, separated by spaces!')
+                    return None
+                compose_tx_str = compose_tx_str[2:].strip()
+                self.send_buf.append(num)
 
-                send_list.extend(trsp_list)
-                send_list.append(common.uchar_checksum(send_list))
+            send_list[10] = int(self.ui_obj.channel_num_Box.currentText()) #信道号0-64
+            send_list[11] = dB_dict[self.ui_obj.dB_Box.currentText()] # 发射功率
+            send_list[12] = len(self.send_buf) # 数据长度 
 
-                for data in send_list:
-                    send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
+            send_list.extend(self.send_buf)
+            send_list.append(common.uchar_checksum(send_list[2:]))
+            send_list.append(0x16)
+            send_list[1] = len(send_list) #GD17帧长度
 
-                self.ui_obj.s3__send_text_2.clear()
-                self.ui_obj.s3__send_text_2.setText(send_str)
+            for data in send_list:
+                send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
 
-            else:
-                QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
-        except: 
-            QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
+            self.ui_obj.s3__send_text.clear()
+            self.ui_obj.s3__send_text.setText(send_str)
+
+        except Exception as e:
+            print ()
+            QMessageBox.critical(self.main_window_obj, "Data Err", "Data Err!")
