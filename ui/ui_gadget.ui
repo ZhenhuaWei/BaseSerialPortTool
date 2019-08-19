@@ -25,8 +25,8 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_11">
-   <item row="0" column="1">
+  <layout class="QGridLayout" name="gridLayout_6">
+   <item row="0" column="0">
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -46,141 +46,7 @@
      </property>
      <widget class="QWidget" name="stackedWidgetPage1">
       <layout class="QGridLayout" name="gridLayout_13">
-       <item row="1" column="3">
-        <layout class="QGridLayout" name="gridLayout_10">
-         <item row="3" column="0">
-          <widget class="QPushButton" name="start_test_bt">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>开始测试</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QPushButton" name="stop_test_bt">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>停止测试</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QPushButton" name="meter_addr">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Arial</family>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>单次测试</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <spacer name="verticalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="2">
-        <layout class="QGridLayout" name="gridLayout_12">
-         <item row="0" column="1">
-          <widget class="QGroupBox" name="groupBox_4">
-           <property name="font">
-            <font>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="title">
-            <string>测试</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_9">
-            <item row="0" column="0">
-             <widget class="QLabel" name="result_lb">
-              <property name="minimumSize">
-               <size>
-                <width>200</width>
-                <height>140</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>200</width>
-                <height>140</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font: 18pt &quot;Adobe Devanagari&quot;;</string>
-              </property>
-              <property name="text">
-               <string>等待测试...</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="0" column="0">
+       <item row="0" column="0" colspan="2">
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
           <widget class="QGroupBox" name="formGroupBox1">
@@ -799,839 +665,1082 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="1" colspan="3">
-        <layout class="QGridLayout" name="gridLayout_8">
+       <item row="1" column="4">
+        <layout class="QGridLayout" name="gridLayout_12">
          <item row="0" column="0">
-          <layout class="QGridLayout" name="gridLayout_5">
-           <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBox">
-             <property name="minimumSize">
-              <size>
-               <width>228</width>
-               <height>91</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>228</width>
-               <height>91</height>
-              </size>
-             </property>
-             <property name="title">
-              <string>发送参数配置</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="0" column="0">
-               <layout class="QGridLayout" name="gridLayout_2">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="channel_num_lb">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>信道号</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QComboBox" name="channel_num_Box">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>0</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>1</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>2</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>3</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>4</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>5</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>6</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>7</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>8</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>9</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>10</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>11</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>12</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>13</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>14</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>15</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>16</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>17</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>18</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>19</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>20</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>21</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>22</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>23</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>24</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>25</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>26</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>27</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>28</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>29</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>30</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>31</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>32</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>33</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>34</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>35</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>36</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>37</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>38</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>39</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>40</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>41</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>42</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>43</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>44</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>45</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>46</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>47</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>48</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>49</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>50</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>51</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>52</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>53</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>54</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>55</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>56</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>57</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>58</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>59</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>60</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>61</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>62</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>63</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>64</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="power_lb">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>发射功率</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QComboBox" name="dB_Box">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>dB17</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>dB01</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>dB02</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>dB05</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>dB11</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>dB14</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>dB20</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QGroupBox" name="groupBox_2">
-             <property name="minimumSize">
-              <size>
-               <width>228</width>
-               <height>91</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>228</width>
-               <height>91</height>
-              </size>
-             </property>
-             <property name="title">
-              <string>循环配置</string>
-             </property>
-             <widget class="QWidget" name="">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>25</y>
-                <width>208</width>
-                <height>48</height>
-               </rect>
+          <widget class="QGroupBox" name="groupBox_4">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="title">
+            <string>测试</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_8">
+            <item row="0" column="0">
+             <widget class="QLabel" name="result_lb">
+              <property name="enabled">
+               <bool>true</bool>
               </property>
-              <layout class="QGridLayout" name="gridLayout_3">
-               <item row="0" column="0">
-                <widget class="QLabel" name="test_times_lb">
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>测试次数</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="test_times_le">
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>100</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>3</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="timing_lb">
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>82</width>
-                   <height>23</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>发送间隔(ms)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="timing_le">
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>100</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>1000</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>140</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>140</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font: 16pt &quot;Adobe Devanagari&quot;;</string>
+              </property>
+              <property name="text">
+               <string>等待测试...</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
              </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QGridLayout" name="gridLayout_10">
+           <item row="3" column="0">
+            <widget class="QPushButton" name="start_test_bt">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>开始测试</string>
+             </property>
             </widget>
            </item>
            <item row="2" column="0">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
+            <widget class="QPushButton" name="stop_test_bt">
+             <property name="minimumSize">
               <size>
-               <width>20</width>
+               <width>70</width>
                <height>40</height>
               </size>
              </property>
-            </spacer>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>停止测试</string>
+             </property>
+            </widget>
            </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <layout class="QGridLayout" name="gridLayout_6">
            <item row="1" column="0">
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
+            <widget class="QPushButton" name="one_test_bt">
+             <property name="minimumSize">
               <size>
-               <width>20</width>
+               <width>70</width>
                <height>40</height>
               </size>
              </property>
-            </spacer>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>单次测试</string>
+             </property>
+            </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBox_3">
-             <property name="title">
-              <string>阈值设置：</string>
+            <spacer name="verticalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
-             <layout class="QGridLayout" name="gridLayout_7">
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="sta_recv_rssi_le">
-                <property name="minimumSize">
-                 <size>
-                  <width>61</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>61</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>0</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="test_times_lb_4">
-                <property name="minimumSize">
-                 <size>
-                  <width>80</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>电表号</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="send_num_lb">
-                <property name="minimumSize">
-                 <size>
-                  <width>80</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>STA接收Rssi</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="recv_num_le_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>110</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>110</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>0</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="test_times_lb_3">
-                <property name="minimumSize">
-                 <size>
-                  <width>80</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>STA发送Rssi</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="sta_send_rssi_le">
-                <property name="minimumSize">
-                 <size>
-                  <width>61</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>61</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>0</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </item>
         </layout>
        </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QTableView" name="tableView">
+       <item row="0" column="3" colspan="2">
+        <layout class="QGridLayout" name="gridLayout_11">
+         <item row="0" column="0">
+          <widget class="QGroupBox" name="groupBox_3">
+           <property name="title">
+            <string>阈值设置：</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="sta_recv_rssi_le">
+              <property name="minimumSize">
+               <size>
+                <width>61</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>61</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="test_times_lb_4">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>电表号</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="send_num_lb">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>STA接收Rssi</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="meter_addr_le">
+              <property name="minimumSize">
+               <size>
+                <width>110</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>110</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="test_times_lb_3">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>STA发送Rssi</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="sta_send_rssi_le">
+              <property name="minimumSize">
+               <size>
+                <width>61</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>61</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pass_cnt_bt">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Adobe Devanagari</family>
+               <pointsize>14</pointsize>
+               <weight>9</weight>
+               <italic>false</italic>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(85, 170, 0);
+font: 75 14pt &quot;Adobe Devanagari&quot;;</string>
+             </property>
+             <property name="text">
+              <string>0通过</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="flash_cnt_bt">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Adobe Devanagari</family>
+               <pointsize>14</pointsize>
+               <weight>9</weight>
+               <italic>false</italic>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="mouseTracking">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(255, 0, 0);
+font: 75 14pt &quot;Adobe Devanagari&quot;;</string>
+             </property>
+             <property name="text">
+              <string>0失败</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="clear_bt">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>清空</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="1" colspan="3">
+        <widget class="QTableView" name="testcase_tv">
          <property name="minimumSize">
           <size>
-           <width>380</width>
+           <width>280</width>
            <height>180</height>
           </size>
          </property>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="QTableView" name="history_tv">
+         <property name="minimumSize">
+          <size>
+           <width>230</width>
+           <height>180</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <widget class="QGroupBox" name="groupBox">
+           <property name="minimumSize">
+            <size>
+             <width>228</width>
+             <height>91</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>228</width>
+             <height>91</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>发送参数配置</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <layout class="QGridLayout" name="gridLayout_2">
+              <item row="0" column="0">
+               <widget class="QLabel" name="channel_num_lb">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>信道号</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="channel_num_Box">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>2</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>3</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>4</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>5</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>6</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>7</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>8</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>9</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>10</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>11</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>12</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>13</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>14</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>15</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>16</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>17</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>18</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>19</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>20</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>21</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>22</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>23</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>24</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>25</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>26</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>27</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>28</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>29</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>30</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>31</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>32</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>33</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>34</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>35</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>36</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>37</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>38</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>39</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>40</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>41</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>42</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>43</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>44</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>45</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>46</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>47</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>48</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>49</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>50</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>51</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>52</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>53</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>54</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>55</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>56</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>57</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>58</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>59</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>60</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>61</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>62</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>63</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>64</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="power_lb">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>发射功率</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="dB_Box">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>dB17</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>dB01</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>dB02</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>dB05</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>dB11</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>dB14</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>dB20</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="minimumSize">
+            <size>
+             <width>228</width>
+             <height>91</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>228</width>
+             <height>91</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>循环配置</string>
+           </property>
+           <widget class="QWidget" name="layoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>25</y>
+              <width>208</width>
+              <height>48</height>
+             </rect>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="0" column="0">
+              <widget class="QLabel" name="test_times_lb">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>测试次数</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="test_times_le">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="timing_lb">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>82</width>
+                 <height>23</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>发送间隔(ms)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="timing_le">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>1000</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="1">
+        <spacer name="verticalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </widget>
-   </item>
-   <item row="1" column="1">
-    <spacer name="verticalSpacer_5">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

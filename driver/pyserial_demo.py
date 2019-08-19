@@ -3,9 +3,9 @@ import serial
 import operator
 import serial.tools.list_ports
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtCore import QTimer
-from PyQt5.QtGui import QIcon,QColor
+from PyQt5.QtWidgets import QMessageBox,QHeaderView,QAbstractItemView
+from PyQt5.QtCore import QTimer,Qt
+from PyQt5.QtGui import QIcon,QColor,QStandardItemModel,QStandardItem,QBrush,QColor
 
 from profile.xobj import XObject
 from common import common
@@ -27,7 +27,33 @@ class pyqt5_serial(object):
         self.test_times = 3
         self.ui_obj.test_times_le.setText(str(self.test_times))
 
+        #设置数据层次结构，4行4列
+        self.model=QStandardItemModel(3,3)
+        #设置水平方向四个头标签文本内容
+        self.model.setHorizontalHeaderLabels(['接收','发送','测试结果'])
+        for row in range(5):
+            for column in range(3):
+                if column ==2:
+                    item=QStandardItem('通过')
+                    item.setTextAlignment(Qt.AlignCenter)
+                    # item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+                    item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+                else:
+                    item=QStandardItem('%d'%(row))
+                    item.setTextAlignment(Qt.AlignCenter)
+                    
+                #设置每个位置的文本值
+                self.model.setItem(row,column,item)
+        self.ui_obj.testcase_tv.setModel(self.model)
+        # 横向填满表格
+        self.ui_obj.testcase_tv.horizontalHeader().setStretchLastSection(True)
+        self.ui_obj.testcase_tv.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        self.ui_obj.testcase_tv.setSelectionMode(QAbstractItemView.NoSelection) #不可选中
+        self.ui_obj.testcase_tv.setEditTriggers(QAbstractItemView.NoEditTriggers) #不可编辑
+        # self.ui_obj.testcase_tv.setShowGrid(False) #网格线条不可见
         self.init()
+        # self.model.removeRow(3)删除
 
     def init(self):
         # 串口检测按钮
@@ -42,12 +68,17 @@ class pyqt5_serial(object):
         # 关闭串口按钮
         self.ui_obj.close_button.clicked.connect(self.port_close)
 
+         # 开始测试
+        self.ui_obj.start_test_bt.clicked.connect(self.start_test)
 
-        #  # 开始测试
-        # self.ui_obj.start_test_bt.clicked.connect(self.start_test)
+        # 停止测试
+        self.ui_obj.stop_test_bt.clicked.connect(self.stop_test)
 
-        # # 停止测试
-        # self.ui_obj.stop_test_bt.clicked.connect(self.stop_test)
+        # 单次测试
+        self.ui_obj.one_test_bt.clicked.connect(self.one_test)
+
+        # 清空
+        self.ui_obj.clear_bt.clicked.connect(self.clear_result)
 
         # 定时发送数据
         self.timer_send = QTimer()
@@ -57,6 +88,9 @@ class pyqt5_serial(object):
         # 定时器接收数据
         self.timer = QTimer()
         self.timer.timeout.connect(self.data_receive)
+
+        # 初始化table view
+
 
     # 保存日志
     def save_log(self):
@@ -198,6 +232,12 @@ class pyqt5_serial(object):
         # self.ui_obj.s3__clear_button_3.setEnabled(True)
 
         # self.timer_send.stop()
+
+    def one_test(self):
+        pass
+
+    def clear_result(self):
+        pass
 
     # 发送数据
     def data_send(self, input_s, hex_send_flag):
