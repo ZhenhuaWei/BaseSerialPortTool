@@ -27,32 +27,37 @@ class pyqt5_serial(object):
         self.test_times = 3
         self.ui_obj.test_times_le.setText(str(self.test_times))
 
-        #设置数据层次结构，4行4列
+        #设置数据层次结构，3列
         self.model=QStandardItemModel(3,3)
         #设置水平方向四个头标签文本内容
         self.model.setHorizontalHeaderLabels(['接收','发送','测试结果'])
-        for row in range(5):
-            for column in range(3):
-                if column ==2:
-                    item=QStandardItem('通过')
-                    item.setTextAlignment(Qt.AlignCenter)
-                    # item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
-                    item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
-                else:
-                    item=QStandardItem('%d'%(row))
-                    item.setTextAlignment(Qt.AlignCenter)
-                    
-                #设置每个位置的文本值
-                self.model.setItem(row,column,item)
-        self.ui_obj.testcase_tv.setModel(self.model)
-        # 横向填满表格
-        self.ui_obj.testcase_tv.horizontalHeader().setStretchLastSection(True)
-        self.ui_obj.testcase_tv.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        self.ui_obj.testcase_tv.setSelectionMode(QAbstractItemView.NoSelection) #不可选中
-        self.ui_obj.testcase_tv.setEditTriggers(QAbstractItemView.NoEditTriggers) #不可编辑
+
+
+
+
+        # for row in range(5):
+        #     for column in range(3):
+        #         if column ==2:
+        #             item=QStandardItem('通过')
+        #             item.setTextAlignment(Qt.AlignCenter)
+        #             # item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+        #             item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+        #         else:
+        #             item=QStandardItem('%d'%(row))
+        #             item.setTextAlignment(Qt.AlignCenter)
+                    
+        #         #设置每个位置的文本值
+        #         self.model.setItem(row,column,item)
+        # self.ui_obj.testcase_tv.setModel(self.model)
+        # # 横向填满表格
+        # self.ui_obj.testcase_tv.horizontalHeader().setStretchLastSection(True)
+        # self.ui_obj.testcase_tv.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        # self.ui_obj.testcase_tv.setSelectionMode(QAbstractItemView.NoSelection) #不可选中
+        # self.ui_obj.testcase_tv.setEditTriggers(QAbstractItemView.NoEditTriggers) #不可编辑
         # self.ui_obj.testcase_tv.setShowGrid(False) #网格线条不可见
-        self.init()
+        self.init().
         # self.model.removeRow(3)删除
 
     def init(self):
