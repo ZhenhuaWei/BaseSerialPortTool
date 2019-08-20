@@ -834,7 +834,7 @@
                </font>
               </property>
               <property name="text">
-               <string>0</string>
+               <string>55</string>
               </property>
              </widget>
             </item>
@@ -965,7 +965,7 @@
                </font>
               </property>
               <property name="text">
-               <string>0</string>
+               <string>55</string>
               </property>
              </widget>
             </item>
@@ -1627,7 +1627,7 @@ font: 75 14pt &quot;Adobe Devanagari&quot;;</string>
                 </font>
                </property>
                <property name="text">
-                <string>测试次数</string>
+                <string>循环测试次数</string>
                </property>
               </widget>
              </item>
@@ -1677,7 +1677,7 @@ font: 75 14pt &quot;Adobe Devanagari&quot;;</string>
                 </font>
                </property>
                <property name="text">
-                <string>发送间隔(ms)</string>
+                <string>循环发送间隔(ms)</string>
                </property>
               </widget>
              </item>
@@ -1702,7 +1702,7 @@ font: 75 14pt &quot;Adobe Devanagari&quot;;</string>
                 </font>
                </property>
                <property name="text">
-                <string>1000</string>
+                <string>0</string>
                </property>
               </widget>
              </item>

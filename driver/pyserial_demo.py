@@ -1,6 +1,10 @@
 import sys
+import time
+import queue
 import serial
 import operator
+import threading
+import re
 import serial.tools.list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox,QHeaderView,QAbstractItemView
@@ -9,6 +13,32 @@ from PyQt5.QtGui import QIcon,QColor,QStandardItemModel,QStandardItem,QBrush,QCo
 
 from profile.xobj import XObject
 from common import common
+
+# Return Code:
+Err_ok = 0
+Err_fail = -1
+Err_timeout = -2
+
+time_out_queue = queue.Queue(maxsize=10)
+time_out = 2
+
+
+def timeout_set(time_interval, to_queue):
+    def wrapper(func):
+        def time_out():
+            to_queue.put(1)
+            # print ("Timeout Error: function not responded in %d seconds, exit automatically!" % time_interval)
+
+        def deco(*args, **kwargs):
+            timer = threading.Timer(time_interval, time_out)
+            timer.start()
+            res = func(*args, **kwargs)
+            timer.cancel()
+            to_queue.queue.clear()
+            return res
+
+        return deco
+    return wrapper
 
 class pyqt5_serial(object):
     def __init__(self):
@@ -22,7 +52,7 @@ class pyqt5_serial(object):
 
         self.send_buf = []
 
-        self.timing_num = 1000
+        self.timing_num = 0
         self.ui_obj.timing_le.setText(str(self.timing_num))
         self.test_times = 3
         self.ui_obj.test_times_le.setText(str(self.test_times))
@@ -59,29 +89,7 @@ class pyqt5_serial(object):
         self.ui_obj.history_tv.setEditTriggers(QAbstractItemView.NoEditTriggers) #不可编辑
         self.ui_obj.history_tv.setShowGrid(False) #网格线条不可见
 
-        # for row in range(5):
-        #     for column in range(3):
-        #         if column ==2:
-        #             item=QStandardItem('通过')
-        #             item.setTextAlignment(Qt.AlignCenter)
-        #             # item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
-        #             item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
-        #         else:
-        #             item=QStandardItem('%d'%(row))
-        #             item.setTextAlignment(Qt.AlignCenter)
-                    
-        #         #设置每个位置的文本值
-        #         self.model.setItem(row,column,item)
-        
-        # # 横向填满表格
-        # self.ui_obj.testcase_tv.horizontalHeader().setStretchLastSection(True)
-        # self.ui_obj.testcase_tv.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-
-        # self.ui_obj.testcase_tv.setSelectionMode(QAbstractItemView.NoSelection) #不可选中
-        # self.ui_obj.testcase_tv.setEditTriggers(QAbstractItemView.NoEditTriggers) #不可编辑
-        # self.ui_obj.testcase_tv.setShowGrid(False) #网格线条不可见
         self.init()
-        # self.model.removeRow(3)删除
 
     def init(self):
         # 串口检测按钮
@@ -108,17 +116,11 @@ class pyqt5_serial(object):
         # 清空
         self.ui_obj.clear_bt.clicked.connect(self.clear_result)
 
-        # 定时发送数据
-        self.timer_send = QTimer()
-        self.timer_send.timeout.connect(self.data_send_timer)
-        # self.ui_obj.timer_send_cb.stateChanged.connect(self.data_send_timer)
-
-        # 定时器接收数据
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.data_receive)
-
         self.ui_obj.pass_cnt_bt.setEnabled(False)
         self.ui_obj.fail_cnt_bt.setEnabled(False)
+        self.ui_obj.stop_test_bt.setEnabled(False)
+
+        self.testing_flag = 0
 
     # 保存日志
     def save_log(self):
@@ -176,9 +178,6 @@ class pyqt5_serial(object):
             QMessageBox.critical(self.main_window_obj, "Port Error", "Can not open this port, please check!")
             return None
 
-        # 打开串口接收定时器，周期为2ms
-        self.timer.start(2)
-
         if self.ser.isOpen():
             #清空缓存区
             self.ser.reset_output_buffer()
@@ -194,15 +193,12 @@ class pyqt5_serial(object):
 
     # 关闭串口
     def port_close(self):
-        self.timer.stop()
-        #self.timer_send.stop()
         try:
             self.ser.close()
         except:
             pass
         self.ui_obj.open_button.setEnabled(True)
         self.ui_obj.close_button.setEnabled(False)
-        #self.ui_obj.lineEdit_3.setEnabled(True)
         self.ui_obj.s1__box_1.setEnabled(True)
         self.ui_obj.s1__box_2.setEnabled(True)
         self.ui_obj.s1__box_3.setEnabled(True)
@@ -212,58 +208,123 @@ class pyqt5_serial(object):
         
         self.ui_obj.formGroupBox1.setTitle("串口状态(关闭)")
 
-        self.timing_num = 1000
-        self.ui_obj.timing_le.setText(str(self.timing_num))
-        self.test_times = 3
-        self.ui_obj.test_times_le.setText(str(self.test_times))
+        self.stop_test()
 
     # 开始测试
     def start_test(self):
-        pass
-        # if self.ser.isOpen():
-        #     self.timing_num = int(self.ui_obj.timing_le.text())
-        #     self.test_times = int(self.ui_obj.test_times_le.text())
+        if self.ser.isOpen():
 
-        #     self.timer_send.start(self.timing_num)
+            self.start_loop_test()
 
-        #     self.send_num = 0
-        #     self.ui_obj.send_num_le.setText(str(self.send_num))
-        #     self.recv_num = 0
-        #     self.ui_obj.recv_num_le.setText(str(self.recv_num))
-        #     self.ui_obj.timing_le.setEnabled(False)
-        #     self.ui_obj.send_num_le.setEnabled(False)
-        #     self.ui_obj.recv_num_le.setEnabled(False)
-        #     self.ui_obj.s3__send_text.setEnabled(False)
-        #     self.ui_obj.compose_tx.setEnabled(False)
+            self.ui_obj.test_times_le.setEnabled(False)
+            self.ui_obj.timing_le.setEnabled(False)
 
-        #     self.ui_obj.compose_bt.setEnabled(False)
-        #     self.ui_obj.s3__clear_button.setEnabled(False)
-        #     self.ui_obj.s3__send_button.setEnabled(False)
-        #     self.ui_obj.start_test_bt.setEnabled(False)
-        #     self.ui_obj.s3__clear_button_3.setEnabled(False)
-        # else:
-        #     QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opend!')
+            self.ui_obj.sta_recv_rssi_le.setEnabled(False)
+            self.ui_obj.sta_send_rssi_le.setEnabled(False)
+            self.ui_obj.meter_addr_le.setEnabled(False)
+
+            self.ui_obj.channel_num_Box.setEnabled(False)
+            self.ui_obj.dB_Box.setEnabled(False)
+
+            self.ui_obj.clear_bt.setEnabled(False)
+
+            self.ui_obj.one_test_bt.setEnabled(False)
+            self.ui_obj.start_test_bt.setEnabled(False)
+
+            self.ui_obj.stop_test_bt.setEnabled(True)
+
+            self.testing_flag = 1
+        else:
+            QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opened!')
 
     # 停止测试
     def stop_test(self):
-        pass
-        # self.ui_obj.timing_le.setEnabled(True)
-        # self.ui_obj.send_num_le.setEnabled(True)
-        # self.ui_obj.recv_num_le.setEnabled(True)
-        # self.ui_obj.s3__send_text.setEnabled(True)
-        # self.ui_obj.compose_tx.setEnabled(True)
+        self.test_times = 0
 
-        # self.ui_obj.compose_bt.setEnabled(True)
-        # self.ui_obj.s3__clear_button.setEnabled(True)
-        # self.ui_obj.s3__send_button.setEnabled(True)
-        # self.ui_obj.start_test_bt.setEnabled(True)
-        # self.ui_obj.s3__clear_button_3.setEnabled(True)
+        self.ui_obj.test_times_le.setEnabled(True)
+        self.ui_obj.timing_le.setEnabled(True)
 
-        # self.timer_send.stop()
+        self.ui_obj.sta_recv_rssi_le.setEnabled(True)
+        self.ui_obj.sta_send_rssi_le.setEnabled(True)
+        self.ui_obj.meter_addr_le.setEnabled(True)
+
+        self.ui_obj.channel_num_Box.setEnabled(True)
+        self.ui_obj.dB_Box.setEnabled(True)
+
+        self.ui_obj.clear_bt.setEnabled(True)
+
+        self.ui_obj.one_test_bt.setEnabled(True)
+        self.ui_obj.start_test_bt.setEnabled(True)
+
+
+        self.ui_obj.stop_test_bt.setEnabled(False)
+
+        if self.testing_flag == 1:
+            self.show_stop_testing_state()
+            self.testing_flag = 0
+    
+    # 开始循环测试 
+    def start_loop_test(self):
+        #测试之前先清空testcase 
+        #设置数据层次结构，3列
+        self.testcase_model=QStandardItemModel(0,3)
+        #设置水平方向四个头标签文本内容
+        self.testcase_model.setHorizontalHeaderLabels(['接收','发送','测试结果'])
+        self.ui_obj.testcase_tv.setModel(self.testcase_model)
+        self.current_testcase_max_row_index = 0
+
+        # 设置发送状态
+        self.show_testing_state()
+
+        # 仅在此处获取发送次数
+        self.test_times = int(self.ui_obj.test_times_le.text())
+
+        pass_flag = 0
+        while self.test_times:
+            self.compose_func()
+            return_value = self.data_send(self.send_buf)
+            if return_value == Err_timeout:
+                # 向testcase tableview 填写红色超时
+                self.show_testcase_timeout()
+                pass_flag = 1
+            else:
+                # 取出该数据帧 校验正确后 比较阈值 填入testcase 
+                # 待开发
+                print(return_value)
+
+                if (self.show_test_case_recv_rssi(55)+self.show_test_case_send_rssi(70)) == 0:
+                    self.show_test_case_pass()
+                    time.sleep(self.timing_le)# 循环发送间隔
+                else:
+                    self.show_test_case_fail()
+                    pass_flag = 1
+
+            self.test_times -= 1
+
+        if pass_flag == 0:
+            self.show_test_pass_state()
+        else:
+            self.show_test_fail_state()
+
 
     def one_test(self):
-        self.compose_func()
-        self.data_send(self.send_buf)
+        if self.ser.isOpen():
+            self.compose_func()
+            return_value = self.data_send(self.send_buf)
+            if return_value == Err_timeout:
+                # 向testcase tableview 填写红色超时
+                self.show_testcase_timeout()
+            else:
+                # 取出该数据帧 校验正确后 比较阈值 填入testcase 
+                # 待开发
+                print(return_value)
+
+                if (self.show_test_case_recv_rssi(55)+self.show_test_case_send_rssi(70)) == 0:
+                    self.show_test_case_pass()
+                else:
+                    self.show_test_case_fail()
+        else:
+            QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opened!')
 
     def clear_result(self):
         self.ui_obj.pass_cnt_bt.setText("0通过")
@@ -289,78 +350,33 @@ class pyqt5_serial(object):
         self.show_wait_testing_state()
 
     # 发送数据
+    @timeout_set(time_out, time_out_queue)
     def data_send(self, send_list):
         input_s = ''
-        if self.ser.isOpen():
-            input_s = bytes(send_list)
-            num = self.ser.write(input_s)
-        else:
-            QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opend!')
 
-    # 接收数据
-    def data_receive(self):
-        pass
-        # recv_buf = []
-        # try:
-        #     num = self.ser.inWaiting()
-        # except:
-        #     self.port_close()
-        #     return None
-        # if num > 2:
-        #     data = self.ser.read(num)
-        #     num = len(data)
-        #     out_srt = ''
+        input_s = bytes(send_list)
+        # num = self.ser.write(input_s)
+        return_value, cs_info = 0, ''
 
-        #     #添加时间戳
-        #     if self.ui_obj.timestamp_cb.checkState():
-        #         out_srt = common.get_datetime()
-        #         out_srt = "[" + out_srt + "] "
-        #     # hex显示
-        #     if self.ui_obj.hex_receive.checkState():
-        #         out_s = ''
-        #         for i in range(0, len(data)):
-        #             out_s = out_s + '{:02X}'.format(data[i]) + ' '
-        #             recv_buf.append(int(data[i]))
-        #         out_s = out_srt + out_s + "\r\n"
-        #         self.ui_obj.s2__receive_text.insertPlainText(out_s)
-        #     else:
-        #         # 串口接收到的字符串为b'123',要转化成unicode字符串才能输出到窗口中去
-        #         out_s = out_srt + data.decode('iso-8859-1')
-        #         self.ui_obj.s2__receive_text.insertPlainText(out_s)
+        m_tt_comp = re.compile(r"6802\d\d\d\d\d\d16")
 
-        #     if self.save_log_fd is not None:
-        #         self.save_log_fd.write(out_s)
+        while 1:
+            # cs_info += pser.read(1)
+            # bytes2read = pser.inWaiting()
+            # tmp = pser.read(bytes2read)
+            # cs_info += tmp
 
-        #     # if operator.eq(recv_buf[:1],self.send_buf[:1]) == True:
-        #     if 0xEF in recv_buf:
-        #         self.recv_num = self.recv_num + 1
-        #         self.ui_obj.recv_num_le.setText(str(self.recv_num))
+            # m_tt = m_tt_comp.search(cs_info.encode("hex"))
+            # if m_tt:
+            #     return_str = m_tt.group(1)
+            #     return return_str.decode("hex")  # eg. 54 48 ---> TH
 
-        #     # 统计接收字符的数量
-        #     self.data_num_received += num
-        #     self.ui_obj.recv_len_el.setText(str(self.data_num_received))
-
-        #     # 获取到text光标
-        #     textCursor = self.ui_obj.s2__receive_text.textCursor()
-        #     # 滚动到底部
-        #     textCursor.movePosition(textCursor.End)
-        #     # 设置光标到text中去
-        #     self.ui_obj.s2__receive_text.setTextCursor(textCursor)
-        # else:
-        #     pass
-
-    # 定时发送数据
-    def data_send_timer(self):
-
-        if self.test_times > 0:
-            self.test_times = self.test_times-1
-            self.data_area_1_send()
-        else:
-            self.stop_test()
-
+            if not time_out_queue.empty():
+                return Err_timeout
 
     #组帧
     def compose_func(self):
+        # time.sleep(2)
         self.get_parameter()# 获取控件上的参数
         self.send_buf = []
         try:
@@ -380,6 +396,8 @@ class pyqt5_serial(object):
             QMessageBox.critical(self.main_window_obj, "Data Err", "Data Err!")
 
     def get_parameter(self):
+        self.timing_num = int(self.ui_obj.timing_le.text())
+
         self.sta_recv_rssi_thr = int(self.ui_obj.sta_recv_rssi_le.text())
         self.sta_send_rssi_thr = int(self.ui_obj.sta_send_rssi_le.text())
         meter_addr_str = self.ui_obj.meter_addr_le.text()
@@ -398,6 +416,10 @@ class pyqt5_serial(object):
     def show_testing_state(self):
         self.ui_obj.result_lb.setStyleSheet("font: 16pt \"Adobe Devanagari\";\n""color: rgb(0, 0, 0);")
         self.ui_obj.result_lb.setText("正在测试...")
+
+    def show_stop_testing_state(self):
+        self.ui_obj.result_lb.setStyleSheet("font: 16pt \"Adobe Devanagari\";\n""color: rgb(0, 0, 0);")
+        self.ui_obj.result_lb.setText("测试中断...")
 
     def show_wait_testing_state(self):
         self.ui_obj.result_lb.setStyleSheet("font: 16pt \"Adobe Devanagari\";\n""color: rgb(0, 0, 0);")
@@ -436,3 +458,54 @@ class pyqt5_serial(object):
         item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
         self.history_model.setItem(self.current_history_max_row_index,1,item)
         self.current_history_max_row_index = self.current_history_max_row_index + 1
+
+
+    def show_testcase_timeout(self):
+        for i in range(0,3):
+            item=QStandardItem('超时')
+            item.setTextAlignment(Qt.AlignCenter)
+            item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+            self.testcase_model.setItem(self.current_testcase_max_row_index,i,item)
+        self.current_testcase_max_row_index = self.current_testcase_max_row_index + 1
+
+    def show_test_case_recv_rssi(self, rssi):
+        if rssi< self.sta_recv_rssi_thr:
+            item=QStandardItem(str(rssi))
+            item.setTextAlignment(Qt.AlignCenter)
+            item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+            self.testcase_model.setItem(self.current_testcase_max_row_index,0,item)
+            return 0
+        else:
+            item=QStandardItem(str(rssi))
+            item.setTextAlignment(Qt.AlignCenter)
+            item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+            self.testcase_model.setItem(self.current_testcase_max_row_index,0,item)
+            return 1
+
+    def show_test_case_send_rssi(self, rssi):
+        if rssi< self.sta_send_rssi_thr:
+            item=QStandardItem(str(rssi))
+            item.setTextAlignment(Qt.AlignCenter)
+            item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+            self.testcase_model.setItem(self.current_testcase_max_row_index,1,item)
+            return 0
+        else:
+            item=QStandardItem(str(rssi))
+            item.setTextAlignment(Qt.AlignCenter)
+            item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+            self.testcase_model.setItem(self.current_testcase_max_row_index,1,item)
+            return 1
+
+    def show_test_case_pass(self):
+        item=QStandardItem('通过')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+        self.testcase_model.setItem(self.current_testcase_max_row_index,2,item)
+        self.current_testcase_max_row_index = self.current_testcase_max_row_index + 1
+
+    def show_test_case_fail(self):
+        item=QStandardItem('失败')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+        self.testcase_model.setItem(self.current_testcase_max_row_index,2,item)
+        self.current_testcase_max_row_index = self.current_testcase_max_row_index + 1

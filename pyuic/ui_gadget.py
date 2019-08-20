@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_gadget.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: PyQt5 UI code generator 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -512,6 +512,7 @@ class Ui_Gadget(object):
         self.layoutWidget.setGeometry(QtCore.QRect(10, 25, 208, 48))
         self.layoutWidget.setObjectName("layoutWidget")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.layoutWidget)
+        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.test_times_lb = QtWidgets.QLabel(self.layoutWidget)
         self.test_times_lb.setMinimumSize(QtCore.QSize(100, 20))
@@ -603,11 +604,11 @@ class Ui_Gadget(object):
         self.stop_test_bt.setText(_translate("Gadget", "停止测试"))
         self.one_test_bt.setText(_translate("Gadget", "单次测试"))
         self.groupBox_3.setTitle(_translate("Gadget", "阈值设置："))
-        self.sta_recv_rssi_le.setText(_translate("Gadget", "0"))
+        self.sta_recv_rssi_le.setText(_translate("Gadget", "55"))
         self.test_times_lb_4.setText(_translate("Gadget", "电表号"))
         self.send_num_lb.setText(_translate("Gadget", "STA接收Rssi"))
         self.test_times_lb_3.setText(_translate("Gadget", "STA发送Rssi"))
-        self.sta_send_rssi_le.setText(_translate("Gadget", "0"))
+        self.sta_send_rssi_le.setText(_translate("Gadget", "55"))
         self.pass_cnt_bt.setText(_translate("Gadget", "0通过"))
         self.fail_cnt_bt.setText(_translate("Gadget", "0失败"))
         self.clear_bt.setText(_translate("Gadget", "清空"))
@@ -687,8 +688,8 @@ class Ui_Gadget(object):
         self.dB_Box.setItemText(5, _translate("Gadget", "dB14"))
         self.dB_Box.setItemText(6, _translate("Gadget", "dB20"))
         self.groupBox_2.setTitle(_translate("Gadget", "循环配置"))
-        self.test_times_lb.setText(_translate("Gadget", "测试次数"))
+        self.test_times_lb.setText(_translate("Gadget", "循环测试次数"))
         self.test_times_le.setText(_translate("Gadget", "3"))
-        self.timing_lb.setText(_translate("Gadget", "发送间隔(ms)"))
-        self.timing_le.setText(_translate("Gadget", "1000"))
+        self.timing_lb.setText(_translate("Gadget", "循环发送间隔(ms)"))
+        self.timing_le.setText(_translate("Gadget", "0"))
 
