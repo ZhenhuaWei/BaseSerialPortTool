@@ -32,7 +32,8 @@ def get_datetime():
             eg: "2018-10-01 00:32:39.993176"
             
     """
-    return str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'))
+    # return str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'))
+    return str(datetime.datetime.now().strftime('%H:%M:%S'))
 
 def uchar_checksum(data, byteorder='little'):
     '''

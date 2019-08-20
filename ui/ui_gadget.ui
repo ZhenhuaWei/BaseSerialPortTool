@@ -912,7 +912,7 @@
                <enum>Qt::LeftToRight</enum>
               </property>
               <property name="text">
-               <string>0</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1007,7 +1007,7 @@ font: 75 14pt &quot;Adobe Devanagari&quot;;</string>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QPushButton" name="flash_cnt_bt">
+            <widget class="QPushButton" name="fail_cnt_bt">
              <property name="minimumSize">
               <size>
                <width>70</width>

@@ -27,14 +27,37 @@ class pyqt5_serial(object):
         self.test_times = 3
         self.ui_obj.test_times_le.setText(str(self.test_times))
 
+        self.sta_recv_rssi_thr = 0
+        self.sta_send_rssi_thr = 0
+        self.meter_addr_list = [0,0,0,0,0,0]
+        self.total_pass_cnt = 0
+        self.total_fail_cnt = 0
+        self.current_testcase_max_row_index = 0
+        self.current_history_max_row_index = 0
+
         #设置数据层次结构，3列
-        self.model=QStandardItemModel(3,3)
+        self.testcase_model=QStandardItemModel(0,3)
         #设置水平方向四个头标签文本内容
-        self.model.setHorizontalHeaderLabels(['接收','发送','测试结果'])
+        self.testcase_model.setHorizontalHeaderLabels(['接收','发送','测试结果'])
+        self.ui_obj.testcase_tv.setModel(self.testcase_model)
 
+        #设置数据层次结构，2列
+        self.history_model=QStandardItemModel(0,2)
+        #设置水平方向四个头标签文本内容
+        self.history_model.setHorizontalHeaderLabels(['测试时间','测试结果'])
+        self.ui_obj.history_tv.setModel(self.history_model)
 
+        self.ui_obj.testcase_tv.horizontalHeader().setStretchLastSection(True)# 横向填满表格
+        self.ui_obj.testcase_tv.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.ui_obj.testcase_tv.setSelectionMode(QAbstractItemView.NoSelection) #不可选中
+        self.ui_obj.testcase_tv.setEditTriggers(QAbstractItemView.NoEditTriggers) #不可编辑
+        self.ui_obj.testcase_tv.setShowGrid(False) #网格线条不可见
 
-
+        self.ui_obj.history_tv.horizontalHeader().setStretchLastSection(True)# 横向填满表格
+        self.ui_obj.history_tv.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.ui_obj.history_tv.setSelectionMode(QAbstractItemView.NoSelection) #不可选中
+        self.ui_obj.history_tv.setEditTriggers(QAbstractItemView.NoEditTriggers) #不可编辑
+        self.ui_obj.history_tv.setShowGrid(False) #网格线条不可见
 
         # for row in range(5):
         #     for column in range(3):
@@ -49,7 +72,7 @@ class pyqt5_serial(object):
                     
         #         #设置每个位置的文本值
         #         self.model.setItem(row,column,item)
-        # self.ui_obj.testcase_tv.setModel(self.model)
+        
         # # 横向填满表格
         # self.ui_obj.testcase_tv.horizontalHeader().setStretchLastSection(True)
         # self.ui_obj.testcase_tv.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -57,7 +80,7 @@ class pyqt5_serial(object):
         # self.ui_obj.testcase_tv.setSelectionMode(QAbstractItemView.NoSelection) #不可选中
         # self.ui_obj.testcase_tv.setEditTriggers(QAbstractItemView.NoEditTriggers) #不可编辑
         # self.ui_obj.testcase_tv.setShowGrid(False) #网格线条不可见
-        self.init().
+        self.init()
         # self.model.removeRow(3)删除
 
     def init(self):
@@ -94,8 +117,8 @@ class pyqt5_serial(object):
         self.timer = QTimer()
         self.timer.timeout.connect(self.data_receive)
 
-        # 初始化table view
-
+        self.ui_obj.pass_cnt_bt.setEnabled(False)
+        self.ui_obj.fail_cnt_bt.setEnabled(False)
 
     # 保存日志
     def save_log(self):
@@ -239,48 +262,40 @@ class pyqt5_serial(object):
         # self.timer_send.stop()
 
     def one_test(self):
-        pass
+        self.compose_func()
+        self.data_send(self.send_buf)
 
     def clear_result(self):
-        pass
+        self.ui_obj.pass_cnt_bt.setText("0通过")
+        self.ui_obj.fail_cnt_bt.setText("0失败")
+        self.total_pass_cnt = 0
+        self.total_fail_cnt = 0
+
+        #设置数据层次结构，3列
+        self.testcase_model=QStandardItemModel(0,3)
+        #设置水平方向四个头标签文本内容
+        self.testcase_model.setHorizontalHeaderLabels(['接收','发送','测试结果'])
+        self.ui_obj.testcase_tv.setModel(self.testcase_model)
+
+        #设置数据层次结构，2列
+        self.history_model=QStandardItemModel(0,2)
+        #设置水平方向四个头标签文本内容
+        self.history_model.setHorizontalHeaderLabels(['测试时间','测试结果'])
+        self.ui_obj.history_tv.setModel(self.history_model)
+
+        self.current_testcase_max_row_index = 0
+        self.current_history_max_row_index = 0
+
+        self.show_wait_testing_state()
 
     # 发送数据
-    def data_send(self, input_s, hex_send_flag):
-        pass
-        # if self.ser.isOpen():
-        #     if input_s != "":
-        #         # 非空字符串
-        #         if hex_send_flag:
-        #             # hex发送
-        #             input_s = input_s.strip()
-        #             send_list = []
-        #             while input_s != '':
-        #                 try:
-        #                     num = int(input_s[0:2], 16)
-        #                 except ValueError:
-        #                     QMessageBox.critical(self.main_window_obj, 'wrong data', 'Please enter hexadecimal, separated by spaces!')
-        #                     return None
-        #                 input_s = input_s[2:].strip()
-        #                 send_list.append(num)
-        #             input_s = bytes(send_list)
-        #         else:
-        #             # ascii发送
-        #             input_s = (input_s + '\r\n').encode('utf-8')
-
-        #         num = self.ser.write(input_s)
-        #         self.data_num_sended += num
-        #         self.ui_obj.send_len_el.setText(str(self.data_num_sended))
-        #         self.send_num = self.send_num+1
-        #         self.ui_obj.send_num_le.setText(str(self.send_num))
-        # else:
-        #     QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opend!')
-
-    #选择发送区1发送
-    def data_area_1_send(self):
-        pass
-        # input_s = self.ui_obj.s3__send_text.toPlainText()
-        # hex_send_flag = self.ui_obj.hex_send.isChecked()
-        # self.data_send(input_s, hex_send_flag)
+    def data_send(self, send_list):
+        input_s = ''
+        if self.ser.isOpen():
+            input_s = bytes(send_list)
+            num = self.ser.write(input_s)
+        else:
+            QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opend!')
 
     # 接收数据
     def data_receive(self):
@@ -346,39 +361,78 @@ class pyqt5_serial(object):
 
     #组帧
     def compose_func(self):
-        pass
-        # try:
-        #     send_str = ''
-        #     self.send_buf = [0xee,]
-        #     send_list = [0x68, 0x00, 0x00, 0x40, 0x04, 0xF4, 0xEE, 0x04, 0x02, 0xE8, 0x00, 0x00, 0x00,]
-        #     dB_dict = {"dB01":1,"dB02":2,"dB05":5,"dB08":8,"dB11":11,"dB14":14,"dB17":17,"dB20":20}
-            
-        #     compose_tx_str = self.ui_obj.compose_tx.toPlainText()
-        #     compose_tx_str = compose_tx_str.strip()
-        #     while compose_tx_str != '':
-        #         try:
-        #             num = int(compose_tx_str[0:2], 16)
-        #         except ValueError:
-        #             QMessageBox.critical(self.main_window_obj, 'wrong data', 'Please enter hexadecimal, separated by spaces!')
-        #             return None
-        #         compose_tx_str = compose_tx_str[2:].strip()
-        #         self.send_buf.append(num)
+        self.get_parameter()# 获取控件上的参数
+        self.send_buf = []
+        try:
+            self.send_buf = [0x68, 0x00, 0x00, 0x40, 0x04, 0xF4, 0xEE, 0x04, 0x02, 0xE8, 0x00, 0x00, 0x00,]
+            dB_dict = {"dB01":1,"dB02":2,"dB05":5,"dB08":8,"dB11":11,"dB14":14,"dB17":17,"dB20":20}
 
-        #     send_list[10] = int(self.ui_obj.channel_num_Box.currentText()) #信道号0-64
-        #     send_list[11] = dB_dict[self.ui_obj.dB_Box.currentText()] # 发射功率
-        #     send_list[12] = len(self.send_buf) # 数据长度 
+            self.send_buf[10] = int(self.ui_obj.channel_num_Box.currentText()) #信道号0-64
+            self.send_buf[11] = dB_dict[self.ui_obj.dB_Box.currentText()] # 发射功率
+            self.send_buf[12] = 6 # 数据固定为长度 
 
-        #     send_list.extend(self.send_buf)
-        #     send_list.append(common.uchar_checksum(send_list[2:]))
-        #     send_list.append(0x16)
-        #     send_list[1] = len(send_list) #GD17帧长度
+            self.send_buf.extend(self.meter_addr_list)
+            self.send_buf.append(common.uchar_checksum(self.send_buf[2:]))
+            self.send_buf.append(0x16)
+            self.send_buf[1] = len(self.send_buf) #GD17帧长度
 
-        #     for data in send_list:
-        #         send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
+        except Exception as e:
+            QMessageBox.critical(self.main_window_obj, "Data Err", "Data Err!")
 
-        #     self.ui_obj.s3__send_text.clear()
-        #     self.ui_obj.s3__send_text.setText(send_str)
+    def get_parameter(self):
+        self.sta_recv_rssi_thr = int(self.ui_obj.sta_recv_rssi_le.text())
+        self.sta_send_rssi_thr = int(self.ui_obj.sta_send_rssi_le.text())
+        meter_addr_str = self.ui_obj.meter_addr_le.text()
+        strlen = len(meter_addr_str)
+        if strlen<12:
+            meter_addr_str = "0"*(12-strlen)+meter_addr_str
 
-        # except Exception as e:
-        #     print ()
-        #     QMessageBox.critical(self.main_window_obj, "Data Err", "Data Err!")
+        print(meter_addr_str)
+        self.meter_addr_list[5] = int(meter_addr_str[0:2], 16)
+        self.meter_addr_list[4] = int(meter_addr_str[2:4], 16)
+        self.meter_addr_list[3] = int(meter_addr_str[4:6], 16)
+        self.meter_addr_list[2] = int(meter_addr_str[6:8], 16)
+        self.meter_addr_list[1] = int(meter_addr_str[8:10], 16)
+        self.meter_addr_list[0] = int(meter_addr_str[10:12], 16)
+
+    def show_testing_state(self):
+        self.ui_obj.result_lb.setStyleSheet("font: 16pt \"Adobe Devanagari\";\n""color: rgb(0, 0, 0);")
+        self.ui_obj.result_lb.setText("正在测试...")
+
+    def show_wait_testing_state(self):
+        self.ui_obj.result_lb.setStyleSheet("font: 16pt \"Adobe Devanagari\";\n""color: rgb(0, 0, 0);")
+        self.ui_obj.result_lb.setText("等待测试...")
+
+    def show_test_pass_state(self):
+        self.ui_obj.result_lb.setText("通过")
+        self.ui_obj.result_lb.setStyleSheet("font: 16pt \"Adobe Devanagari\";\n""color: rgb(0, 255, 0);")
+        self.total_pass_cnt = self.total_pass_cnt+1
+        self.ui_obj.pass_cnt_bt.setText(str(self.total_pass_cnt)+"通过")
+
+        item=QStandardItem(common.get_datetime())
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(0, 0, 0)))# 绿色
+        self.history_model.setItem(self.current_history_max_row_index,0,item)
+
+        item=QStandardItem('通过')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+        self.history_model.setItem(self.current_history_max_row_index,1,item)
+        self.current_history_max_row_index = self.current_history_max_row_index + 1
+
+    def show_test_fail_state(self):
+        self.ui_obj.result_lb.setText("失败")
+        self.ui_obj.result_lb.setStyleSheet("font: 16pt \"Adobe Devanagari\";\n""color: rgb(255, 0, 0);")
+        self.total_fail_cnt = self.total_fail_cnt+1
+        self.ui_obj.fail_cnt_bt.setText(str(self.total_fail_cnt)+"失败")
+
+        item=QStandardItem(common.get_datetime())
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(0, 0, 0)))
+        self.history_model.setItem(self.current_history_max_row_index,0,item)
+
+        item=QStandardItem('失败')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+        self.history_model.setItem(self.current_history_max_row_index,1,item)
+        self.current_history_max_row_index = self.current_history_max_row_index + 1
