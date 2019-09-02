@@ -176,7 +176,7 @@ class pyqt5_serial(object):
             config_handler['thr config'] = {}
             config_handler['thr config']['sta_recv_rssi_thr'] = 0 if self.ui_obj.sta_recv_rssi_le.text() is "" else self.ui_obj.sta_recv_rssi_le.text()
             config_handler['thr config']['sta_send_rssi_thr'] = 0 if self.ui_obj.sta_send_rssi_le.text() is "" else self.ui_obj.sta_send_rssi_le.text()
-            config_handler['thr config']['meter_addr'] = 0 if self.ui_obj.meter_addr_le.text() is "" else self.ui_obj.sta_send_rssi_le.text()
+            config_handler['thr config']['meter_addr'] = 0 if self.ui_obj.meter_addr_le.text() is "" else self.ui_obj.meter_addr_le.text()
 
             config_handler['test case config'] = {} 
             if(self.ui_obj.meter_read_cb.isChecked() is True):
