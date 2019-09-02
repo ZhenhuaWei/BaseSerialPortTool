@@ -45,7 +45,7 @@ class pyqt5_serial(object):
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
-        self.main_window_obj.setWindowTitle("HT_RF_PRODUCTION_TEST_TOOLS-v0.0.1 by WeiZhenhua")
+        self.main_window_obj.setWindowTitle("HT_RF_PRODUCTION_TEST_TOOLS-v0.0.2 by WeiZhenhua")
         self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
@@ -288,8 +288,8 @@ class pyqt5_serial(object):
 
         pass_flag = 0
         while self.test_times:
-            self.compose_func()
-            return_value = self.data_send(self.send_buf, time_out_queue)
+            self.compose_func(0x01)
+            return_value = self.data_send(self.send_buf, time_out_queue, 0x01)
             if return_value == Err_timeout:
                 # 向testcase tableview 填写红色超时
                 self.show_testcase_timeout()
@@ -314,6 +314,28 @@ class pyqt5_serial(object):
 
             self.test_times -= 1
 
+            if((self.test_times == 0) and (self.ui_obj.meter_read_cb.isChecked())): # 抄表测试项
+                self.compose_func(0x02)
+                return_value = self.data_send(self.send_buf, time_out_queue, 0x02)
+                if return_value == Err_timeout:
+                    # 向testcase tableview 填写红色超时
+                    self.show_test_case_meter_read_fail()
+                    pass_flag = 1
+                else:
+                    # 取出该数据帧 校验正确后 比较阈值 填入testcase 
+                    self.recv_buf_list[0] = int(return_value[0:2], 16)
+                    self.recv_buf_list[1] = int(return_value[2:4], 16)
+                    self.recv_buf_list[2] = int(return_value[4:6], 16)
+                    self.recv_buf_list[3] = int(return_value[6:8], 16)
+                    self.recv_buf_list[4] = int(return_value[8:10], 16)
+                    self.recv_buf_list[5] = int(return_value[10:12], 16)
+
+                    if self.recv_buf_list[4] != common.uchar_checksum(self.recv_buf_list[:4]):
+                        self.show_test_case_meter_read_fail()
+                        pass_flag = 1
+                    else:
+                        self.show_test_case_meter_read_pass()
+
         if pass_flag == 0:
             self.show_test_pass_state()
         else:
@@ -324,8 +346,8 @@ class pyqt5_serial(object):
     def one_test(self):
         if self.ser.isOpen():
             self.ui_obj.one_test_bt.setEnabled(False)
-            self.compose_func()
-            return_value = self.data_send(self.send_buf, time_out_queue)
+            self.compose_func(0x01)
+            return_value = self.data_send(self.send_buf, time_out_queue, 0x01)
             if return_value == Err_timeout:
                 # 向testcase tableview 填写红色超时
                 self.show_testcase_timeout()
@@ -348,6 +370,27 @@ class pyqt5_serial(object):
                     self.show_test_case_pass()
                 else:
                     self.show_test_case_fail()
+
+            if(self.ui_obj.meter_read_cb.isChecked()): # 抄表测试项
+                self.compose_func(0x01)
+                return_value = self.data_send(self.send_buf, time_out_queue, 0x01)
+                if return_value == Err_timeout:
+                    # 向testcase tableview 填写红色超时
+                    self.show_test_case_meter_read_fail()
+                else:
+                    # 取出该数据帧 校验正确后 比较阈值 填入testcase 
+                    self.recv_buf_list[0] = int(return_value[0:2], 16)
+                    self.recv_buf_list[1] = int(return_value[2:4], 16)
+                    self.recv_buf_list[2] = int(return_value[4:6], 16)
+                    self.recv_buf_list[3] = int(return_value[6:8], 16)
+                    self.recv_buf_list[4] = int(return_value[8:10], 16)
+                    self.recv_buf_list[5] = int(return_value[10:12], 16)
+
+                    if self.recv_buf_list[4] != common.uchar_checksum(self.recv_buf_list[:4]):
+                        self.show_test_case_meter_read_fail()
+                        return
+                    self.show_test_case_meter_read_pass()
+
             self.ui_obj.one_test_bt.setEnabled(True)
         else:
             QMessageBox.critical(self.main_window_obj, 'Warning', 'Please check port is opened!')
@@ -377,14 +420,19 @@ class pyqt5_serial(object):
 
     # 发送数据
     @timeout_set(time_out, time_out_queue)
-    def data_send(self, send_list, time_out_queue):
+    def data_send(self, send_list, time_out_queue, opt_type):
         input_s = ''
 
         input_s = bytes(send_list)
         num = self.ser.write(input_s)
         return_value, cs_info = 0, ''
 
-        m_tt_comp = re.compile(r"6802\w{6}16")
+        if(opt_type == 0x01):
+            m_tt_comp = re.compile(r"6801\w{6}16")
+        elif(opt_type == 0x02):
+            m_tt_comp = re.compile(r"6802\w{6}16")
+        else:
+            m_tt_comp = re.compile(r"6800\w{6}16") 
 
         while 1:
             # data = self.ser.read(1)
@@ -400,7 +448,7 @@ class pyqt5_serial(object):
             if not time_out_queue.empty():
                 return Err_timeout
     #组帧
-    def compose_func(self):
+    def compose_func(self, opt_type):
         # time.sleep(2)
         self.get_parameter()# 获取控件上的参数
         self.send_buf = []
@@ -410,8 +458,9 @@ class pyqt5_serial(object):
 
             self.send_buf[10] = int(self.ui_obj.channel_num_Box.currentText()) #信道号0-64
             self.send_buf[11] = dB_dict[self.ui_obj.dB_Box.currentText()] # 发射功率
-            self.send_buf[12] = 6 # 数据固定为长度 
+            self.send_buf[12] = 7 # 数据固定为长度 
 
+            self.send_buf.append(opt_type) # 0x01 点名 0x02 抄表
             self.send_buf.extend(self.meter_addr_list)
             self.send_buf.append(common.uchar_checksum(self.send_buf[2:]))
             self.send_buf.append(0x16)
@@ -539,6 +588,42 @@ class pyqt5_serial(object):
 
     def show_test_case_fail(self):
         item=QStandardItem('失败')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+        self.testcase_model.setItem(self.current_testcase_max_row_index,2,item)
+        self.current_testcase_max_row_index = self.current_testcase_max_row_index + 1
+        QApplication.processEvents()# 刷新页面
+
+    def show_test_case_meter_read_pass(self):
+        item=QStandardItem('--')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+        self.testcase_model.setItem(self.current_testcase_max_row_index,0,item)
+
+        item=QStandardItem('--')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+        self.testcase_model.setItem(self.current_testcase_max_row_index,1,item)
+
+        item=QStandardItem('抄表成功')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(0, 255, 0)))# 绿色
+        self.testcase_model.setItem(self.current_testcase_max_row_index,2,item)
+        self.current_testcase_max_row_index = self.current_testcase_max_row_index + 1
+        QApplication.processEvents()# 刷新页面
+
+    def show_test_case_meter_read_fail(self):
+        item=QStandardItem('--')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+        self.testcase_model.setItem(self.current_testcase_max_row_index,0,item)
+
+        item=QStandardItem('--')
+        item.setTextAlignment(Qt.AlignCenter)
+        item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
+        self.testcase_model.setItem(self.current_testcase_max_row_index,1,item)
+
+        item=QStandardItem('抄表失败')
         item.setTextAlignment(Qt.AlignCenter)
         item.setForeground(QBrush(QColor(255, 0, 0)))# 红色
         self.testcase_model.setItem(self.current_testcase_max_row_index,2,item)
