@@ -945,7 +945,7 @@
                <enum>Qt::LeftToRight</enum>
               </property>
               <property name="text">
-               <string/>
+               <string>0</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1105,12 +1105,25 @@ font: 75 14pt &quot;Adobe Devanagari&quot;;</string>
              <property name="text">
               <string>抄表</string>
              </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <property name="tristate">
+              <bool>false</bool>
+             </property>
             </widget>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label">
              <property name="text">
               <string>可选测试项：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="save_config_bt">
+             <property name="text">
+              <string>保存配置</string>
              </property>
             </widget>
            </item>

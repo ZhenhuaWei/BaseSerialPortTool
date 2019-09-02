@@ -6,6 +6,8 @@ import operator
 import threading
 import re
 import serial.tools.list_ports
+from configobj import ConfigObj
+from os import path
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox,QHeaderView,QAbstractItemView,QApplication
 from PyQt5.QtCore import QTimer,Qt
@@ -45,7 +47,7 @@ class pyqt5_serial(object):
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
-        self.main_window_obj.setWindowTitle("HT_RF_PRODUCTION_TEST_TOOLS-v0.0.2 by WeiZhenhua")
+        self.main_window_obj.setWindowTitle("HT_RF_PRODUCTION_TEST_TOOLS-v0.0.3 by WeiZhenhua")
         self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
@@ -53,13 +55,14 @@ class pyqt5_serial(object):
         self.send_buf = []
 
         self.timing_num = 0
-        self.ui_obj.timing_le.setText(str(self.timing_num))
         self.test_times = 3
-        self.ui_obj.test_times_le.setText(str(self.test_times))
 
-        self.recv_buf_list = [0,0,0,0,0,0]
         self.sta_recv_rssi_thr = 0
         self.sta_send_rssi_thr = 0
+        self.meter_addr = 0
+        self.meter_read_flag = True
+
+        self.recv_buf_list = [0,0,0,0,0,0]
         self.meter_addr_list = [0,0,0,0,0,0]
         self.total_pass_cnt = 0
         self.total_fail_cnt = 0
@@ -94,6 +97,7 @@ class pyqt5_serial(object):
         self.ui_obj.testcase_tv.setAutoScrollMargin(3)
 
         self.init()
+        self.show_config()
 
     def init(self):
         # 串口检测按钮
@@ -120,11 +124,69 @@ class pyqt5_serial(object):
         # 清空
         self.ui_obj.clear_bt.clicked.connect(self.clear_result)
 
+        # 保存配置
+        self.ui_obj.save_config_bt.clicked.connect(self.save_config)
+
         self.ui_obj.pass_cnt_bt.setEnabled(False)
         self.ui_obj.fail_cnt_bt.setEnabled(False)
         self.ui_obj.stop_test_bt.setEnabled(False)
 
         self.testing_flag = 0
+
+    def show_config(self):
+        config_file = r"ht_rf_production_test_config.ini"
+        if(path.exists(config_file) is True):
+            try:
+                config_handler = ConfigObj(config_file)
+
+                if(int(config_handler["test case config"]["meter_read_flag"]) is 1):
+                    self.meter_read_flag = True
+                else:
+                    self.meter_read_flag = False
+                self.test_times = int(config_handler["loop test config"]["test_times"])
+                self.timing_num = int(config_handler["loop test config"]["test_timing"])
+                self.sta_recv_rssi_thr = int(config_handler["thr config"]["sta_recv_rssi_thr"])
+                self.sta_send_rssi_thr = int(config_handler["thr config"]["sta_send_rssi_thr"])
+                self.meter_addr        = int(config_handler["thr config"]["meter_addr"])
+
+                self.ui_obj.test_times_le.setText(str(self.test_times))
+                self.ui_obj.timing_le.setText(str(self.timing_num))
+                self.ui_obj.sta_recv_rssi_le.setText(str(self.sta_recv_rssi_thr))
+                self.ui_obj.sta_send_rssi_le.setText(str(self.sta_send_rssi_thr))
+                self.ui_obj.meter_addr_le.setText(str(self.meter_addr))
+                self.ui_obj.meter_read_cb.setChecked(self.meter_read_flag)
+            except:
+                QMessageBox.critical(self.main_window_obj, "配置文件异常", "配置文件读取错误，使用默认值!")
+        else:
+            pass
+
+    def save_config(self):
+        # try:
+            config_file = r"ht_rf_production_test_config.ini"
+            if(path.exists(config_file) is False):
+                fp = open(config_file,"w")
+                fp.close()
+
+            config_handler = ConfigObj(config_file)
+
+            config_handler['loop test config'] = {}
+            config_handler['loop test config']['test_times'] = 0 if self.ui_obj.test_times_le.text() is "" else self.ui_obj.test_times_le.text()
+            config_handler['loop test config']['test_timing'] = 0 if self.ui_obj.timing_le.text() is "" else self.ui_obj.timing_le.text()
+
+            config_handler['thr config'] = {}
+            config_handler['thr config']['sta_recv_rssi_thr'] = 0 if self.ui_obj.sta_recv_rssi_le.text() is "" else self.ui_obj.sta_recv_rssi_le.text()
+            config_handler['thr config']['sta_send_rssi_thr'] = 0 if self.ui_obj.sta_send_rssi_le.text() is "" else self.ui_obj.sta_send_rssi_le.text()
+            config_handler['thr config']['meter_addr'] = 0 if self.ui_obj.meter_addr_le.text() is "" else self.ui_obj.sta_send_rssi_le.text()
+
+            config_handler['test case config'] = {} 
+            if(self.ui_obj.meter_read_cb.isChecked() is True):
+                config_handler['test case config']['meter_read_flag'] = 1
+            else:
+                config_handler['test case config']['meter_read_flag'] = 0
+            config_handler.write()
+            QMessageBox.information(self.main_window_obj, "成功", "配置文件保存成功！")
+        # except:
+        #     QMessageBox.critical(self.main_window_obj, "错误", "配置文件保存失败！")
 
     # 保存日志
     def save_log(self):
