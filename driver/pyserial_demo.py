@@ -24,6 +24,23 @@ Err_timeout = -2
 time_out_queue = queue.Queue(maxsize=10)
 time_out = 2
 
+# 未调试
+# def try_except(func):
+#     def handle_problems(obj_instance, *args, **kwargs):
+#         try:
+#             res = func(obj_instance, *args, **kwargs)
+#             return res
+#         except Exception:
+#             exc_type, exc_instance, exc_traceback = sys.exc_info()
+#             formatted_traceback = ''.join(traceback.format_tb(exc_traceback))
+#             exc_info = ("\n%s\n%s:\n%s" % (formatted_traceback, exc_type.__name__, exc_instance))
+#             if obj_instance.logger:
+#                 obj_instance.logger.debug("0,%s,E00" % exc_info)
+#             return ("0,%s,E00" % exc_info)
+#         finally:
+#             pass
+
+#     return handle_problems
 
 def timeout_set(time_interval, to_queue):
     def wrapper(func):
@@ -240,6 +257,8 @@ class pyqt5_serial(object):
             self.ser.stopbits = int(self.ui_obj.s1__box_6.currentText())
             self.ser.parity = self.ui_obj.s1__box_5.currentText()
             self.ser.open()
+            self.show_wait_testing_state()
+
         except:
             QMessageBox.critical(self.main_window_obj, "Port Error", "Can not open this port, please check!")
             return None
