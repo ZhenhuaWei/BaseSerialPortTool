@@ -42,29 +42,12 @@ class pyqt5_serial(object):
         # 关闭串口按钮
         self.ui_obj.close_button.clicked.connect(self.port_close)
 
-        # 发送数据按钮 发送区1
-        self.ui_obj.s3__send_button.clicked.connect(self.data_area_1_send)
-
-        # 发送数据按钮 发送区2
-        self.ui_obj.s3__send_button_2.clicked.connect(self.data_area_2_send)
-
         # 保存日志
         self.ui_obj.save_log_cb.clicked.connect(self.save_log)
-
-        # 定时发送数据
-        # self.timer_send = QTimer()
-        # self.timer_send.timeout.connect(self.data_send)
-        # self.ui_obj.timer_send_cb.stateChanged.connect(self.data_send_timer)
 
         # 定时器接收数据
         self.timer = QTimer()
         self.timer.timeout.connect(self.data_receive)
-
-        # 清除发送窗口 发送区1
-        self.ui_obj.s3__clear_button.clicked.connect(self.send_data_1_clear)
-
-        # 清除发送窗口 发送区2
-        self.ui_obj.s3__clear_button_2.clicked.connect(self.send_data_2_clear)
 
         # 清除组帧透传窗口
         self.ui_obj.s3__clear_button_3.clicked.connect(self.compose_data_clear)
@@ -75,7 +58,7 @@ class pyqt5_serial(object):
         # 隐藏端口设置
         self.ui_obj.setting_hide_cb.clicked.connect(self.setting_hide)
 
-        self.ui_obj.compose_bt.clicked.connect(self.compose_func)
+        self.ui_obj.send_bt.clicked.connect(self.compose_func)
 
     def setting_hide(self):
         if self.ui_obj.setting_hide_cb.isChecked():
@@ -209,18 +192,6 @@ class pyqt5_serial(object):
         else:
             pass
 
-    #选择发送区1发送
-    def data_area_1_send(self):
-        input_s = self.ui_obj.s3__send_text.toPlainText()
-        hex_send_flag = self.ui_obj.hex_send.isChecked()
-        self.data_send(input_s, hex_send_flag)
-
-    #选择发送区1发送
-    def data_area_2_send(self):
-        input_s = self.ui_obj.s3__send_text_2.toPlainText()
-        hex_send_flag = self.ui_obj.hex_send_2.isChecked()
-        self.data_send(input_s, hex_send_flag)
-
     # 接收数据
     def data_receive(self):
         try:
@@ -265,23 +236,6 @@ class pyqt5_serial(object):
         else:
             pass
 
-    # 定时发送数据
-    # def data_send_timer(self):
-    #     if self.ui_obj.timer_send_cb.isChecked():
-    #         self.timer_send.start(int(self.ui_obj.lineEdit_3.text()))
-    #         self.ui_obj.lineEdit_3.setEnabled(False)
-    #     else:
-    #         self.timer_send.stop()
-    #         self.ui_obj.lineEdit_3.setEnabled(True)
-
-    # 清除发送区1
-    def send_data_1_clear(self):
-        self.ui_obj.s3__send_text.setText("")
-
-    # 清除发送区2
-    def send_data_2_clear(self):
-        self.ui_obj.s3__send_text_2.setText("")
-
     # 清除透传数据区
     def compose_data_clear(self):
         self.ui_obj.compose_tx.setText("")
@@ -317,10 +271,11 @@ class pyqt5_serial(object):
                 for data in send_list:
                     send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
 
-                self.ui_obj.s3__send_text_2.clear()
-                self.ui_obj.s3__send_text_2.setText(send_str)
+                hex_send_flag = self.ui_obj.hex_send.isChecked()
+                self.data_send(send_str, hex_send_flag)
 
             else:
                 QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
-        except: 
+        except Exception as e:
+            print (repr(e))
             QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
