@@ -27,6 +27,10 @@ class pyqt5_serial(object):
         self.data_num_sended = 0
         self.ui_obj.send_len_el.setText(str(self.data_num_sended))
 
+        # 11-99变量
+        self.small_value = 11
+        self.big_value = 11
+
         self.init()
 
     def init(self):
@@ -60,6 +64,12 @@ class pyqt5_serial(object):
 
         # 发送按钮
         self.ui_obj.send_bt.clicked.connect(self.send_func)
+
+        # 组信标帧按钮
+        self.ui_obj.beacon_compose_bt.clicked.connect(self.compose_trsp_beacon)
+
+        # 组信标帧按钮
+        self.ui_obj.test_beacon_send_bt.clicked.connect(self.test_beacon_send)
 
     def setting_hide(self):
         if self.ui_obj.setting_hide_cb.isChecked():
@@ -192,7 +202,7 @@ class pyqt5_serial(object):
                 self.data_num_sended += num
                 self.ui_obj.send_len_el.setText(str(self.data_num_sended))
         else:
-            pass
+            QMessageBox.critical(self.main_window_obj, "Send Err", "please open Port!")
 
     # 接收数据
     def data_receive(self):
@@ -240,7 +250,14 @@ class pyqt5_serial(object):
 
     # 透传区域发送
     def send_func(self):
-        input_s = self.compose_func(self.compose_trsp_data)
+        input_s = self.compose_func(self.get_trsp_data)
+        if input_s is None:
+            return
+        hex_send_flag = self.ui_obj.hex_send.isChecked()
+        self.data_send(input_s, hex_send_flag)
+
+    def test_beacon_send(self):
+        input_s = self.compose_func(self.get_beacon_trsp_data)
         if input_s is None:
             return
         hex_send_flag = self.ui_obj.hex_send.isChecked()
@@ -253,14 +270,112 @@ class pyqt5_serial(object):
     # 清除接收区
     def receive_data_clear(self):
         self.ui_obj.s2__receive_text.setText("")
+        self.data_num_received = 0
+        self.ui_obj.recv_len_el.setText(str(self.data_num_received))
+        self.data_num_sended = 0
+        self.ui_obj.send_len_el.setText(str(self.data_num_sended))
 
     # 组信标帧
-    def compose_trsp_beacon(self):
-        pass
+    def compose_trsp_beacon(self, test_flag):
+        send_str = ""
+        beacon_list = [0x40, 0xcd, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, \
+            0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x29, 0x12, 0x00, \
+            0x60, 0x09, 0x00, 0x09, 0x00, 0x00, 0x7e, 0x03, 0x00]
 
-    # 组透传帧
-    def compose_trsp_data(self):
+        #panid
+        beacon_list[26] = int(self.ui_obj.beacon_panid_le.text(), 10)>>8
+        beacon_list[25] = int(self.ui_obj.beacon_panid_le.text(), 10)&0xff
+
+        # 信标标识
+        beacon_list[21] = int(self.ui_obj.beacon_sn_le.text(), 10)
+
+        # 网络规模
+        beacon_list[23] = int(self.ui_obj.net_volume_le.text(), 10)>>8
+        beacon_list[22] = int(self.ui_obj.net_volume_le.text(), 10)&0xff
+
+        # 场强门限
+        beacon_list[24] = int(self.ui_obj.rssi_thr_le.text(), 10)
+
+        # 中心节点地址
+        cco_addr_str = self.ui_obj.cco_addr_le.text()
+        strlen = len(cco_addr_str)
+        if strlen<12:
+            cco_addr_str = "0"*(12-strlen)+cco_addr_str
+        beacon_list[32] = int(cco_addr_str[0:2], 16)
+        beacon_list[31] = int(cco_addr_str[2:4], 16)
+        beacon_list[30] = int(cco_addr_str[4:6], 16)
+        beacon_list[29] = int(cco_addr_str[6:8], 16)
+        beacon_list[28] = int(cco_addr_str[8:10], 16)
+        beacon_list[27] = int(cco_addr_str[10:12], 16)
+
+        # Mac 层目的地址
+        macdestaddr_str = self.ui_obj.macdestaddr_le.text()
+        strlen = len(macdestaddr_str)
+        if strlen<12:
+            macdestaddr_str = "0"*(12-strlen)+macdestaddr_str
+        beacon_list[10] = int(macdestaddr_str[0:2], 16)
+        beacon_list[9] = int(macdestaddr_str[2:4], 16)
+        beacon_list[8] = int(macdestaddr_str[4:6], 16)
+        beacon_list[7] = int(macdestaddr_str[6:8], 16)
+        beacon_list[6] = int(macdestaddr_str[8:10], 16)
+        beacon_list[5] = int(macdestaddr_str[10:12], 16)
+
+        if (test_flag == 0):
+            # Mac 层源地址
+            macsrcaddr_str = self.ui_obj.macsrcaddr_le.text()
+            strlen = len(macsrcaddr_str)
+            if strlen<12:
+                macsrcaddr_str = "0"*(12-strlen)+macsrcaddr_str
+            beacon_list[16] = int(macsrcaddr_str[0:2], 16)
+            beacon_list[15] = int(macsrcaddr_str[2:4], 16)
+            beacon_list[14] = int(macsrcaddr_str[4:6], 16)
+            beacon_list[13] = int(macsrcaddr_str[6:8], 16)
+            beacon_list[12] = int(macsrcaddr_str[8:10], 16)
+            beacon_list[11] = int(macsrcaddr_str[10:12], 16)
+
+            for data in beacon_list:
+                send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
+
+            self.ui_obj.compose_tx.clear()
+            self.ui_obj.compose_tx.setText(send_str)
+        else:# 测试 模拟信标应答
+            self.ui_obj.compose_tx.clear()
+
+            self.small_value = self.small_value+1
+            if self.small_value == 100:
+                self.small_value = 11
+                self.big_value = self.big_value + 1
+                if self.big_value == 100:
+                    self.big_value = 11
+
+            addr_str = "00009900"
+            addr_str = addr_str + str(self.big_value)
+            addr_str = addr_str + str(self.small_value)
+            self.ui_obj.macsrcaddr_le.setText(addr_str)
+
+            macsrcaddr_str = self.ui_obj.macsrcaddr_le.text()
+            strlen = len(macsrcaddr_str)
+            if strlen<12:
+                macsrcaddr_str = "0"*(12-strlen)+macsrcaddr_str
+            beacon_list[16] = int(macsrcaddr_str[0:2], 16)
+            beacon_list[15] = int(macsrcaddr_str[2:4], 16)
+            beacon_list[14] = int(macsrcaddr_str[4:6], 16)
+            beacon_list[13] = int(macsrcaddr_str[6:8], 16)
+            beacon_list[12] = int(macsrcaddr_str[8:10], 16)
+            beacon_list[11] = int(macsrcaddr_str[10:12], 16)
+
+            for data in beacon_list:
+                send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
+
+        return send_str
+
+    # 获取透传帧
+    def get_trsp_data(self):
         return self.ui_obj.compose_tx.toPlainText()
+
+    # 组信标测试帧
+    def get_beacon_trsp_data(self):
+        return self.compose_trsp_beacon(1)
 
     #组发送帧 = 固定头尾 + 透传数据
     def compose_func(self, compose_obj):
@@ -290,14 +405,11 @@ class pyqt5_serial(object):
                 for data in send_list:
                     send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
 
-                # hex_send_flag = self.ui_obj.hex_send.isChecked()
-                # self.data_send(send_str, hex_send_flag)
                 return send_str
 
             else:
                 QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
                 return None
         except Exception as e:
-            print (e)
             QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
             return None

@@ -884,6 +884,9 @@
            <property name="text">
             <string>Channel :</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
           </widget>
          </item>
          <item row="0" column="1">
@@ -899,6 +902,9 @@
              <width>60</width>
              <height>25</height>
             </size>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;0-64&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>0</string>
@@ -1050,7 +1056,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="destaddr_le">
+            <widget class="QLineEdit" name="macdestaddr_le">
              <property name="minimumSize">
               <size>
                <width>140</width>
@@ -1063,11 +1069,14 @@ p, li { white-space: pre-wrap; }
                <height>20</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;BCD码地址&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
              <property name="text">
-              <string>778899</string>
+              <string>FFFFFFFFFFFF</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1098,7 +1107,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="srcaddr_le">
+            <widget class="QLineEdit" name="macsrcaddr_le">
              <property name="minimumSize">
               <size>
                <width>140</width>
@@ -1110,6 +1119,9 @@ p, li { white-space: pre-wrap; }
                <width>140</width>
                <height>20</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;BCD码地址&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
@@ -1146,24 +1158,14 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QPushButton" name="beacon_compose_send_bt">
+            <widget class="QPushButton" name="test_beacon_send_bt">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;模拟信标应答：&lt;/p&gt;&lt;p&gt;MAC层源地址从000099000001依次递增&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
-              <string>组帧发送</string>
+              <string>模拟信标应答</string>
              </property>
             </widget>
-           </item>
-           <item row="0" column="2">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </item>
@@ -1205,6 +1207,9 @@ p, li { white-space: pre-wrap; }
                <width>60</width>
                <height>20</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;十进制&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>1</string>
@@ -1251,6 +1256,9 @@ p, li { white-space: pre-wrap; }
                <height>20</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;十进制&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>20</string>
              </property>
@@ -1296,6 +1304,9 @@ p, li { white-space: pre-wrap; }
                <height>20</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;十进制&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>96</string>
              </property>
@@ -1330,7 +1341,7 @@ p, li { white-space: pre-wrap; }
               <enum>Qt::RightToLeft</enum>
              </property>
              <property name="text">
-              <string>PanID：</string>
+              <string>载荷PanID：</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1338,7 +1349,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="beacon_sn_le_2">
+            <widget class="QLineEdit" name="beacon_panid_le">
              <property name="minimumSize">
               <size>
                <width>60</width>
@@ -1350,6 +1361,9 @@ p, li { white-space: pre-wrap; }
                <width>60</width>
                <height>20</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;十进制1-65535&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>5555</string>
@@ -1399,7 +1413,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="beacon_sn_le_3">
+            <widget class="QLineEdit" name="cco_addr_le">
              <property name="minimumSize">
               <size>
                <width>140</width>
@@ -1411,6 +1425,9 @@ p, li { white-space: pre-wrap; }
                <width>140</width>
                <height>20</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;BCD码地址&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>778899</string>
