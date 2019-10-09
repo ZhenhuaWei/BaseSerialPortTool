@@ -58,7 +58,8 @@ class pyqt5_serial(object):
         # 隐藏端口设置
         self.ui_obj.setting_hide_cb.clicked.connect(self.setting_hide)
 
-        self.ui_obj.send_bt.clicked.connect(self.compose_func)
+        # 发送按钮
+        self.ui_obj.send_bt.clicked.connect(self.send_func)
 
     def setting_hide(self):
         if self.ui_obj.setting_hide_cb.isChecked():
@@ -181,6 +182,7 @@ class pyqt5_serial(object):
                             return None
                         input_s = input_s[2:].strip()
                         send_list.append(num)
+
                     input_s = bytes(send_list)
                 else:
                     # ascii发送
@@ -236,6 +238,14 @@ class pyqt5_serial(object):
         else:
             pass
 
+    # 透传区域发送
+    def send_func(self):
+        input_s = self.compose_func(self.compose_trsp_data)
+        if input_s is None:
+            return
+        hex_send_flag = self.ui_obj.hex_send.isChecked()
+        self.data_send(input_s, hex_send_flag)
+
     # 清除透传数据区
     def compose_data_clear(self):
         self.ui_obj.compose_tx.setText("")
@@ -244,14 +254,23 @@ class pyqt5_serial(object):
     def receive_data_clear(self):
         self.ui_obj.s2__receive_text.setText("")
 
-    #组帧
-    def compose_func(self):
+    # 组信标帧
+    def compose_trsp_beacon(self):
+        pass
+
+    # 组透传帧
+    def compose_trsp_data(self):
+        return self.ui_obj.compose_tx.toPlainText()
+
+    #组发送帧 = 固定头尾 + 透传数据
+    def compose_func(self, compose_obj):
         try:
             send_str = ''
             send_list = [0x53,0x4D,0,0]
             trsp_list = []
             channel_num_str = self.ui_obj.channel_num_le.text()
-            compose_tx_str = self.ui_obj.compose_tx.toPlainText()
+            compose_tx_str = compose_obj()
+
             if int(channel_num_str) >= 0 and int(channel_num_str) <=64:
                 send_list[2] = int(channel_num_str)
                 compose_tx_str = compose_tx_str.strip()
@@ -271,11 +290,14 @@ class pyqt5_serial(object):
                 for data in send_list:
                     send_str = send_str + '{:#04X}'.format(data)[2:4] + " "
 
-                hex_send_flag = self.ui_obj.hex_send.isChecked()
-                self.data_send(send_str, hex_send_flag)
+                # hex_send_flag = self.ui_obj.hex_send.isChecked()
+                # self.data_send(send_str, hex_send_flag)
+                return send_str
 
             else:
                 QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
+                return None
         except Exception as e:
-            print (repr(e))
+            print (e)
             QMessageBox.critical(self.main_window_obj, "Channel Num Err", "Channel Num range 0~64")
+            return None
