@@ -14,7 +14,7 @@ class pyqt5_serial(object):
         self.ui_obj = XObject.get_object("ui_obj")
         self.main_window_obj = XObject.get_object("main_window_obj")
 
-        self.main_window_obj.setWindowTitle("HT_RF_TRSP_Tools-v0.0.3")
+        self.main_window_obj.setWindowTitle("HT_国网无线监控及透传工具-v0.0.4")
         self.main_window_obj.setWindowIcon(QIcon('./image/ico.png'))
         self.ser = serial.Serial()
         self.port_check()
